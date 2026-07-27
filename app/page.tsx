@@ -186,31 +186,67 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="workspace-picker">
+        <div className={`sidebar-profile-card ${workspace === "house" ? "is-house" : ""}`}>
           <button
-            className="workspace-trigger"
-            onClick={() => setWorkspaceMenu((open) => !open)}
-            aria-expanded={workspaceMenu}
+            className="profile-cover"
+            onClick={() => navigate(workspace === "writer" ? "profile" : "house-overview")}
+            aria-label={workspace === "writer" ? "Open Rumana Kabir's profile" : "Open Batayan Prokashoni"}
           >
-            <span className="avatar">{workspace === "writer" ? "র" : "বা"}</span>
-            <span>
-              <strong>{workspace === "writer" ? "Rumana Kabir" : "Batayan Prokashoni"}</strong>
-              <small>{workspace === "writer" ? "Writer workspace" : "Publishing house"}</small>
-            </span>
-            <span className="workspace-chevron">⌄</span>
+            <img src="/images/rumana-cover.webp" alt="" />
           </button>
-          {workspaceMenu && (
-            <div className="workspace-menu">
-              <button onClick={() => switchWorkspace("writer")}>
-                <span className="avatar small">র</span>
-                <span><strong>Writer studio</strong><small>Write, publish, grow</small></span>
+
+          <button
+            className="profile-avatar-button"
+            onClick={() => navigate(workspace === "writer" ? "profile" : "house-overview")}
+            aria-label={workspace === "writer" ? "Open Rumana Kabir's profile" : "Open Batayan Prokashoni"}
+          >
+            {workspace === "writer"
+              ? <img src="/images/rumana-profile.webp" alt="Rumana Kabir" />
+              : <span className="house-profile-monogram">বা</span>}
+          </button>
+
+          <div className="profile-card-content">
+            <button
+              className="profile-name"
+              onClick={() => navigate(workspace === "writer" ? "profile" : "house-overview")}
+            >
+              <strong>{workspace === "writer" ? "Rumana Kabir" : "Batayan Prokashoni"}</strong>
+              <span className="verified-badge" aria-label="Verified">✓</span>
+            </button>
+            <p>
+              {workspace === "writer"
+                ? "গল্পে শব্দের চেয়ে নীরবতা বেশি রাখি।"
+                : "Thoughtful Bengali books for curious readers."}
+            </p>
+            <small>{workspace === "writer" ? "Dhaka · Fiction writer" : "Dhaka · Independent publisher"}</small>
+
+            <div className="workspace-picker profile-workspace-picker">
+              <button
+                className="workspace-trigger"
+                onClick={() => setWorkspaceMenu((open) => !open)}
+                aria-expanded={workspaceMenu}
+              >
+                <span className="workspace-status" aria-hidden="true" />
+                <span>
+                  <strong>{workspace === "writer" ? "Writer workspace" : "Publishing house"}</strong>
+                  <small>{workspace === "writer" ? "Write, publish, grow" : "Catalogue & business"}</small>
+                </span>
+                <span className="workspace-chevron">⌄</span>
               </button>
-              <button onClick={() => switchWorkspace("house")}>
-                <span className="avatar small house-avatar">বা</span>
-                <span><strong>Batayan house</strong><small>Catalogue & business</small></span>
-              </button>
+              {workspaceMenu && (
+                <div className="workspace-menu">
+                  <button onClick={() => switchWorkspace("writer")}>
+                    <span className="avatar small">র</span>
+                    <span><strong>Writer studio</strong><small>Write, publish, grow</small></span>
+                  </button>
+                  <button onClick={() => switchWorkspace("house")}>
+                    <span className="avatar small house-avatar">বা</span>
+                    <span><strong>Batayan house</strong><small>Catalogue & business</small></span>
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
         <nav className="primary-nav" aria-label="Primary navigation">
@@ -233,10 +269,12 @@ export default function Home() {
         </nav>
 
         <div className="sidebar-footer">
-          <button className="profile-row" onClick={() => navigate("profile")}>
-            <span className="profile-portrait">র</span>
-            <span><strong>Rumana Kabir</strong><small>Writer plan</small></span>
-            <span className="workspace-chevron">⌄</span>
+          <button
+            className={`footer-profile-link ${view === "profile" ? "active" : ""}`}
+            onClick={() => navigate("profile")}
+          >
+            <Icon name="audience" size={17} />
+            <span>View profile</span>
           </button>
           <button
             className={`settings-link ${view === "settings" ? "active" : ""}`}
