@@ -797,7 +797,7 @@ function EditorView({ onToast }: { onToast: (message: string) => void }) {
             lang="bn"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
-            style={{ lineHeight }}
+            style={{ lineHeight: lineSpacing }}
           />
           <footer><span>{wordCount} words · {draft.split(/\n+/).filter(Boolean).length} paragraphs</span><span>Last saved just now</span></footer>
         </article>
