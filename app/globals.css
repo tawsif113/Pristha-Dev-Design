@@ -549,24 +549,6 @@ input:focus-visible,
   font-size: 18px;
 }
 
-.settings-link {
-  width: 35px;
-  height: 35px;
-  display: grid;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: #9fa9a3;
-  cursor: pointer;
-}
-
-.settings-link:hover,
-.settings-link.active {
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
-}
-
 .workspace {
   min-height: 100svh;
   margin-left: var(--sidebar-width);
@@ -745,6 +727,15 @@ input:focus-visible,
 .language-button span {
   margin: 0 4px;
   color: var(--faint);
+}
+
+.topbar-settings {
+  color: var(--muted);
+}
+
+.topbar-settings.active {
+  background: rgba(23, 108, 104, 0.1);
+  color: var(--teal);
 }
 
 .main-content {
@@ -1752,9 +1743,7 @@ input:focus-visible,
 }
 
 .reader-feature {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.6fr);
-  gap: 28px;
+  display: block;
   margin-top: 42px;
 }
 
@@ -1781,8 +1770,6 @@ input:focus-visible,
 }
 
 .resume-reading h2,
-.reading-pass h2,
-.library-highlight h2,
 .profile-achievements h2,
 .reader-note blockquote,
 .house-note h2 {
@@ -1819,40 +1806,6 @@ input:focus-visible,
   margin-top: 9px;
   color: var(--faint);
   font-size: 10px;
-}
-
-.reading-pass {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 36px;
-  border-radius: 11px;
-  background: var(--teal-soft);
-}
-
-.reading-pass h2 {
-  font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 35px;
-}
-
-.reading-pass p {
-  margin: 14px 0 22px;
-  color: #52635d;
-  font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 14px;
-  line-height: 1.55;
-}
-
-.reading-pass > strong {
-  color: var(--teal);
-  font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 32px;
-  font-weight: 500;
-}
-
-.reading-pass > strong small {
-  color: var(--muted);
-  font-size: 13px;
 }
 
 .open-section {
@@ -2127,29 +2080,6 @@ input:focus-visible,
   font-size: 10px;
 }
 
-.library-highlight {
-  min-height: 155px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 48px;
-  margin-top: 35px;
-  padding: 28px 34px;
-  border-radius: 10px;
-  background: var(--teal-soft);
-}
-
-.library-highlight h2 {
-  margin-top: 8px;
-}
-
-.library-highlight p {
-  margin: 6px 0 0;
-  color: #5c6b66;
-  font-family: var(--font-pristha-bengali), serif;
-  font-size: 12px;
-}
-
 .discovery-intro {
   max-width: 760px;
   margin: 44px 0 30px;
@@ -2170,25 +2100,6 @@ input:focus-visible,
   color: var(--muted);
   font-family: var(--font-pristha-display), Georgia, serif;
   font-size: 14px;
-}
-
-.library-highlight > div:nth-child(2) {
-  display: flex;
-  flex-direction: column;
-  padding-left: 40px;
-  border-left: 1px solid rgba(23, 108, 104, 0.2);
-}
-
-.library-highlight > div:nth-child(2) strong {
-  color: var(--teal);
-  font-family: var(--font-pristha-display), serif;
-  font-size: 35px;
-  font-weight: 500;
-}
-
-.library-highlight > div:nth-child(2) span {
-  color: var(--muted);
-  font-size: 10.5px;
 }
 
 .shelf-section {
@@ -3512,14 +3423,6 @@ input:focus-visible,
 }
 
 @media (max-width: 1120px) {
-  .reader-feature {
-    grid-template-columns: 1fr;
-  }
-
-  .reading-pass {
-    min-height: 220px;
-  }
-
   .discover-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -3548,14 +3451,6 @@ input:focus-visible,
 
   .discover-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .library-highlight {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .library-highlight > button {
-    grid-column: 1 / -1;
   }
 
   .audience-grid,
@@ -3739,22 +3634,6 @@ input:focus-visible,
 
   .discover-copy > strong {
     font-size: 17px;
-  }
-
-  .library-highlight {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 24px;
-  }
-
-  .library-highlight > div:nth-child(2) {
-    padding: 18px 0 0;
-    border-top: 1px solid rgba(23, 108, 104, 0.2);
-    border-left: 0;
-  }
-
-  .library-highlight > button {
-    grid-column: auto;
   }
 
   .dashboard-metrics,
