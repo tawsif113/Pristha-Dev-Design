@@ -276,13 +276,6 @@ export default function Home() {
             <Icon name="audience" size={17} />
             <span>View profile</span>
           </button>
-          <button
-            className={`settings-link ${view === "settings" ? "active" : ""}`}
-            onClick={() => navigate("settings")}
-            aria-label="Settings"
-          >
-            <Icon name="settings" size={18} />
-          </button>
         </div>
       </aside>
 
@@ -325,6 +318,14 @@ export default function Home() {
             <span className="topbar-rule" />
             <button className="language-button" onClick={() => setToast("Language preference saved")}>
               EN <span>/</span> বাংলা
+            </button>
+            <button
+              className={`icon-button topbar-settings ${view === "settings" ? "active" : ""}`}
+              onClick={() => navigate("settings")}
+              aria-label="Settings"
+              aria-current={view === "settings" ? "page" : undefined}
+            >
+              <Icon name="settings" size={19} />
             </button>
           </div>
         </header>
@@ -519,7 +520,7 @@ function PageHeader({
 }: {
   eyebrow: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   action?: React.ReactNode;
 }) {
   return (
@@ -527,7 +528,7 @@ function PageHeader({
       <div>
         <span className="eyebrow">{eyebrow}</span>
         <h1>{title}</h1>
-        <p>{subtitle}</p>
+        {subtitle && <p>{subtitle}</p>}
       </div>
       {action && <div className="page-header-action">{action}</div>}
     </header>
@@ -546,7 +547,6 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
       <PageHeader
         eyebrow="Good evening, Rumana"
         title="Tonight on your page"
-        subtitle="Return to a familiar story, or meet a voice you have never read."
       />
 
       <section className="reader-feature">
@@ -562,12 +562,6 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
           <button className="primary-button" onClick={() => onNavigate("home")}>
             Resume <Icon name="arrow" size={18} />
           </button>
-        </div>
-        <div className="reading-pass">
-          <span className="eyebrow">Reading Pass</span>
-          <h2>One shelf.<br />Many houses.</h2>
-          <p>Read across participating publishers without buying every chapter separately.</p>
-          <strong>৳299 <small>/ month</small></strong>
         </div>
       </section>
 
@@ -608,15 +602,6 @@ function HomeLibrary({ onNavigate }: { onNavigate: (view: View) => void }) {
         <div><span className="eyebrow">Your collection</span><h2 id="home-library-title">Your library</h2><p>Owned, saved, and borrowed stories—kept in one quiet place.</p></div>
         <button className="secondary-button">Import a book</button>
       </div>
-      <section className="library-highlight">
-        <div>
-          <span className="eyebrow">Reading now</span>
-          <h2 lang="bn">অধ্যায় চার — দেরি</h2>
-          <p lang="bn">চিঠি · নুসরাত আহমেদ</p>
-        </div>
-        <div><strong>38%</strong><span>6 of 16 pages</span></div>
-        <button className="primary-button" onClick={() => onNavigate("home")}>Keep reading <Icon name="arrow" size={17} /></button>
-      </section>
       <section className="shelf-section">
         <div className="section-heading"><div><span className="eyebrow">Personal shelf</span><h2>All books</h2></div><button>Sort by recent</button></div>
         <div className="shelf-list">
@@ -706,7 +691,7 @@ function DashboardView({ onToast }: { onToast: (message: string) => void }) {
         <div className="section-heading"><div><span className="eyebrow">Revenue</span><h2>Top earning titles</h2></div><button>Export report</button></div>
         {[
           ["চিঠি", "Serial unlocks", "18,240", "৳38,900"],
-          ["নীলদরিয়া", "Reading Pass", "12,870", "৳21,450"],
+          ["নীলদরিয়া", "Direct purchases", "12,870", "৳21,450"],
           ["Monsoon Letters", "Direct sales", "4,108", "৳8,070"],
         ].map((row) => (
           <div className="data-row" key={row[0]}><strong>{row[0]}</strong><span>{row[1]}</span><span>{row[2]} reads</span><b>{row[3]}</b></div>
@@ -720,7 +705,7 @@ function AudienceView() {
   const readers = [
     ["তাসনিম রহমান", "@tasnimreads", "Top 1% reader", "24 chapters"],
     ["Arif Chowdhury", "@arifc", "New supporter", "11 chapters"],
-    ["মাইশা কবির", "@maishak", "Reading Pass", "9 chapters"],
+    ["মাইশা কবির", "@maishak", "Returning reader", "9 chapters"],
   ];
   return (
     <div className="product-page page-enter">
