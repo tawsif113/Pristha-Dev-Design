@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type View =
   | "home"
   | "discover"
-  | "library"
   | "studio"
   | "dashboard"
   | "audience"
@@ -88,7 +87,6 @@ const writerNav = [
     items: [
       { id: "home" as View, label: "Home", icon: "home" as IconName },
       { id: "discover" as View, label: "Discover", icon: "discover" as IconName },
-      { id: "library" as View, label: "Library", icon: "library" as IconName },
     ],
   },
   {
@@ -123,7 +121,7 @@ const houseNav = [
 const searchItems = [
   { label: "Studio overview", meta: "Workspace", view: "studio" as View },
   { label: "চিঠি — Chapter 08", meta: "Draft", view: "editor" as View },
-  { label: "Monsoon Letters", meta: "Book", view: "library" as View },
+  { label: "Monsoon Letters", meta: "Book", view: "home" as View },
   { label: "নদীর ওপারে", meta: "Chapter", view: "editor" as View },
   { label: "Audience insights", meta: "Analytics", view: "audience" as View },
   { label: "Catalogue", meta: "Publishing house", view: "house-catalogue" as View },
@@ -394,7 +392,7 @@ function Studio({
         <div className="chapters-section">
           <div className="section-heading">
             <div><span className="eyebrow">Latest work</span><h2>Recent chapters</h2></div>
-            <button onClick={() => onNavigate("library")}>View all</button>
+            <button onClick={() => onNavigate("home")}>View all</button>
           </div>
           <div className="chapter-list">
             {chapters.map((chapter) => (
@@ -464,7 +462,6 @@ function PlaceholderView({
 }) {
   if (view === "home") return <ReaderHome onNavigate={onNavigate} />;
   if (view === "discover") return <DiscoverView onNavigate={onNavigate} />;
-  if (view === "library") return <LibraryView onNavigate={onNavigate} />;
   if (view === "dashboard") return <DashboardView onToast={onToast} />;
   if (view === "audience") return <AudienceView />;
   if (view === "editor") return <EditorView onToast={onToast} />;
@@ -524,7 +521,7 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
             <div className="reading-progress"><span /></div>
             <small>38% · page 6 of 16 · 4 min left</small>
           </div>
-          <button className="primary-button" onClick={() => onNavigate("library")}>
+          <button className="primary-button" onClick={() => onNavigate("home")}>
             Resume <Icon name="arrow" size={18} />
           </button>
         </div>
@@ -539,11 +536,11 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
       <section className="open-section">
         <div className="section-heading">
           <div><span className="eyebrow">Fresh for you</span><h2>টাটকা পাতা</h2></div>
-          <button onClick={() => onNavigate("discover")}>See all</button>
+          <button onClick={() => onNavigate("discover")}>Explore stories</button>
         </div>
         <div className="cover-grid">
           {recommendations.map((book) => (
-            <button key={book.title} onClick={() => onNavigate("discover")}>
+            <button key={book.title} onClick={() => onNavigate("home")}>
               <span className={`discovery-cover ${book.tone}`}><b>{book.initial}</b><small>PRISTHA</small></span>
               <span><strong lang="bn">{book.title}</strong><small lang="bn">{book.author}</small></span>
             </button>
@@ -554,63 +551,25 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
       <section className="feed-line">
         <span className="profile-portrait">ন</span>
         <div><strong lang="bn">নুসরাত আহমেদ নতুন একটি অধ্যায় প্রকাশ করেছেন</strong><small>চিঠি · Chapter 08 · 22 minutes ago</small></div>
-        <button onClick={() => onNavigate("discover")}>Read chapter <Icon name="arrow" size={16} /></button>
+        <button onClick={() => onNavigate("home")}>Read chapter <Icon name="arrow" size={16} /></button>
       </section>
+      <HomeLibrary onNavigate={onNavigate} />
     </div>
   );
 }
 
-function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
-  const books = [
-    { title: "অচেনা জানালা", author: "সায়মা রহমান", tag: "Literary fiction", tone: "umber", initial: "অ" },
-    { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", tag: "Magical realism", tone: "sage", initial: "ম" },
-    { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", tag: "Mystery", tone: "navy", initial: "শ" },
-    { title: "নীল দরজা", author: "রাইসা করিম", tag: "Romance", tone: "teal", initial: "নী" },
-    { title: "শহরের নিচে", author: "নাবিল হাসান", tag: "Speculative", tone: "plum", initial: "শ" },
-  ];
-  return (
-    <div className="product-page page-enter">
-      <PageHeader
-        eyebrow="Curated discovery"
-        title="Find your next voice"
-        subtitle="A slower, more thoughtful way to discover Bengali stories."
-      />
-      <div className="filter-row" aria-label="Genres">
-        {["For you", "Literary", "Romance", "Mystery", "Poetry", "Non-fiction"].map((filter, index) => (
-          <button className={index === 0 ? "active" : ""} key={filter}>{filter}</button>
-        ))}
-      </div>
-      <section className="discover-grid">
-        {books.map((book, index) => (
-          <button key={book.title} className={index === 0 ? "featured" : ""} onClick={() => onNavigate("library")}>
-            <span className={`discovery-cover ${book.tone}`}><b lang="bn">{book.initial}</b><small>PRISTHA</small></span>
-            <span className="discover-copy">
-              <small>{book.tag}</small>
-              <strong lang="bn">{book.title}</strong>
-              <em lang="bn">{book.author}</em>
-              <span>{index === 0 ? "Editor’s selection" : `${(4.9 - index * 0.2).toFixed(1)} reader rating`}</span>
-            </span>
-          </button>
-        ))}
-      </section>
-    </div>
-  );
-}
-
-function LibraryView({ onNavigate }: { onNavigate: (view: View) => void }) {
+function HomeLibrary({ onNavigate }: { onNavigate: (view: View) => void }) {
   const shelf = [
     { title: "চিঠি", author: "নুসরাত আহমেদ", progress: 38, tone: "saffron", initial: "চি", status: "Reading" },
     { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", progress: 72, tone: "navy", initial: "শে", status: "Reading" },
     { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", progress: 100, tone: "sage", initial: "মে", status: "Finished" },
   ];
   return (
-    <div className="product-page page-enter">
-      <PageHeader
-        eyebrow="Your collection"
-        title="Library"
-        subtitle="Owned, saved, and borrowed stories—kept in one quiet place."
-        action={<button className="secondary-button">Import a book</button>}
-      />
+    <section className="home-library" aria-labelledby="home-library-title">
+      <div className="section-heading home-library-heading">
+        <div><span className="eyebrow">Your collection</span><h2 id="home-library-title">Your library</h2><p>Owned, saved, and borrowed stories—kept in one quiet place.</p></div>
+        <button className="secondary-button">Import a book</button>
+      </div>
       <section className="library-highlight">
         <div>
           <span className="eyebrow">Reading now</span>
@@ -635,6 +594,50 @@ function LibraryView({ onNavigate }: { onNavigate: (view: View) => void }) {
           ))}
         </div>
       </section>
+    </section>
+  );
+}
+
+function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
+  const [activeGenre, setActiveGenre] = useState("For you");
+  const books = [
+    { title: "অচেনা জানালা", author: "সায়মা রহমান", tag: "Literary fiction", tone: "umber", initial: "অ" },
+    { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", tag: "Magical realism", tone: "sage", initial: "ম" },
+    { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", tag: "Mystery", tone: "navy", initial: "শ" },
+    { title: "নীল দরজা", author: "রাইসা করিম", tag: "Romance", tone: "teal", initial: "নী" },
+    { title: "শহরের নিচে", author: "নাবিল হাসান", tag: "Speculative", tone: "plum", initial: "শ" },
+  ];
+  return (
+    <div className="product-page page-enter">
+      <PageHeader
+        eyebrow="Curated discovery"
+        title="Find your next voice"
+        subtitle="A slower, more thoughtful way to discover Bengali stories."
+        action={<button className="secondary-button" onClick={() => onNavigate("home")}>Return to your shelf</button>}
+      />
+      <section className="discovery-intro">
+        <span className="eyebrow">This week’s edit</span>
+        <h2>Stories about distance, return, and the rooms we remember.</h2>
+        <p>Selected by Pristha editors from independent writers and publishing houses.</p>
+      </section>
+      <div className="filter-row" aria-label="Genres">
+        {["For you", "Literary", "Romance", "Mystery", "Poetry", "Non-fiction"].map((filter) => (
+          <button className={activeGenre === filter ? "active" : ""} onClick={() => setActiveGenre(filter)} key={filter}>{filter}</button>
+        ))}
+      </div>
+      <div className="discover-grid">
+        {books.map((book, index) => (
+          <button key={book.title} className={index === 0 ? "featured" : ""} onClick={() => onNavigate("home")}>
+            <span className={`discovery-cover ${book.tone}`}><b lang="bn">{book.initial}</b><small>PRISTHA</small></span>
+            <span className="discover-copy">
+              <small>{book.tag}</small>
+              <strong lang="bn">{book.title}</strong>
+              <em lang="bn">{book.author}</em>
+              <span>{index === 0 ? "Editor’s selection" : `${(4.9 - index * 0.2).toFixed(1)} reader rating`}</span>
+            </span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -712,32 +715,111 @@ function EditorView({ onToast }: { onToast: (message: string) => void }) {
   const [draft, setDraft] = useState(
     "চিঠিটা ডাকবাক্সে ফেলে আসার পর থেকে মিরার মনে হচ্ছিল, শহরটা যেন থেমে আছে।\n\nপ্রতিটি সকাল শুরু হলো একইভাবে—জানালার পাশে এক কাপ চা, দূরে রিকশার ঘণ্টি, আর দরজার নিচে কোনো উত্তর নেই।\n\nসপ্তম দিনের বিকেলে, বৃষ্টি নামার ঠিক আগে, সে আবার সেই পরিচিত হাতের লেখা দেখল।",
   );
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [focusMode, setFocusMode] = useState(false);
+  const [manuscriptStyle, setManuscriptStyle] = useState("Novel manuscript");
+  const [lineSpacing, setLineSpacing] = useState("1.8");
+  const [toolTab, setToolTab] = useState<"Craft" | "Notes" | "Review">("Craft");
   const wordCount = draft.trim().split(/\s+/).filter(Boolean).length;
+  const goal = 1500;
+  const progress = Math.min(100, Math.round((wordCount / goal) * 100));
+
+  function wrapSelection(before: string, after = before, emptyText = "text") {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = draft.slice(start, end) || emptyText;
+    const nextDraft = `${draft.slice(0, start)}${before}${selected}${after}${draft.slice(end)}`;
+    setDraft(nextDraft);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + before.length, start + before.length + selected.length);
+    });
+  }
+
+  function insertAtCursor(text: string) {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    setDraft(`${draft.slice(0, start)}${text}${draft.slice(end)}`);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + text.length, start + text.length);
+    });
+  }
+
   return (
-    <div className="editor-page page-enter">
+    <div className={`editor-page page-enter ${focusMode ? "is-focus-mode" : ""}`}>
       <div className="editor-head">
-        <div><span className="eyebrow">চিঠি · Chapter 08</span><h1 lang="bn">নদীর ওপারে</h1></div>
-        <div className="editor-status"><span>All changes saved</span><button className="secondary-button" onClick={() => onToast("Preview opened")}>Preview</button><button className="primary-button" onClick={() => onToast("Chapter sent for review")}>Send for review</button></div>
+        <div><span className="eyebrow">চিঠি <span className="crumb-divider">/</span> Chapter 08</span><h1 lang="bn">নদীর ওপারে</h1></div>
+        <div className="editor-status"><span><i /> All changes saved</span><button className="secondary-button" onClick={() => onToast("Preview opened")}>Preview</button><button className="primary-button" onClick={() => onToast("Chapter sent for review")}>Send for review</button></div>
+      </div>
+      <div className="editor-toolbar" role="toolbar" aria-label="Writing tools">
+        <div className="toolbar-group toolbar-style">
+          <label className="sr-only" htmlFor="paragraph-style">Paragraph style</label>
+          <select id="paragraph-style" defaultValue="Body" onChange={(event) => onToast(`${event.target.value} style applied`)}>
+            <option>Body</option><option>Chapter title</option><option>Section heading</option><option>Block quote</option><option>Epigraph</option>
+          </select>
+        </div>
+        <div className="toolbar-group">
+          <button onClick={() => wrapSelection("**")} aria-label="Bold"><b>B</b></button>
+          <button onClick={() => wrapSelection("_")} aria-label="Italic"><i>I</i></button>
+          <button onClick={() => wrapSelection("[", "](link)", "link text")} aria-label="Add link"><span className="link-glyph">↗</span></button>
+        </div>
+        <div className="toolbar-group">
+          <button onClick={() => insertAtCursor("\n\n— — —\n\n")} aria-label="Insert scene break">✦</button>
+          <button onClick={() => insertAtCursor("—")} aria-label="Insert em dash">—</button>
+          <button onClick={() => wrapSelection("“", "”", "dialogue")} aria-label="Add dialogue quotation">“ ”</button>
+          <button onClick={() => onToast("Comment pin added to this paragraph")} aria-label="Add comment">◌</button>
+        </div>
+        <div className="toolbar-spacer" />
+        <button className={focusMode ? "focus-toggle active" : "focus-toggle"} onClick={() => setFocusMode((current) => !current)}>{focusMode ? "Exit focus" : "Focus mode"}</button>
+        <span className="toolbar-count">{wordCount} words</span>
       </div>
       <div className="editor-workspace">
         <aside className="chapter-outline">
-          <span className="eyebrow">Outline</span>
+          <div className="outline-head"><span className="eyebrow">Manuscript</span><button onClick={() => onToast("Chapter panel opened")} aria-label="More manuscript options">•••</button></div>
+          <span className="outline-book">চিঠি <small>8 chapters</small></span>
           {["01 · চিঠির শুরু", "02 · শহরের শব্দ", "03 · অপেক্ষা", "04 · নদীর ওপারে"].map((item, index) => (
-            <button className={index === 3 ? "active" : ""} key={item}>{item}</button>
+            <button className={index === 3 ? "active" : ""} key={item}><span>{item}</span>{index === 3 && <small>Editing</small>}</button>
           ))}
           <button className="add-scene"><Icon name="plus" size={15} /> Add scene</button>
+          <div className="outline-note"><span>Chapter note</span><p>She receives the reply just before the rain.</p></div>
         </aside>
         <article className="paper-editor">
-          <span>পর্ব ১ · অধ্যায় ৮</span>
+          <div className="paper-kicker"><span>পর্ব ১ · অধ্যায় ৮</span><span>Draft</span></div>
           <h2 lang="bn">নদীর ওপারে</h2>
-          <textarea aria-label="Chapter text" lang="bn" value={draft} onChange={(event) => setDraft(event.target.value)} />
-          <footer><span>{wordCount} words</span><span>Last saved just now</span></footer>
+          <textarea
+            ref={textareaRef}
+            aria-label="Chapter text"
+            lang="bn"
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            style={{ lineHeight }}
+          />
+          <footer><span>{wordCount} words · {draft.split(/\n+/).filter(Boolean).length} paragraphs</span><span>Last saved just now</span></footer>
         </article>
         <aside className="editor-tools">
-          <span className="eyebrow">Chapter</span>
-          <label>Status<select defaultValue="draft"><option value="draft">Draft</option><option value="review">In review</option><option value="published">Published</option></select></label>
-          <label>Visibility<select defaultValue="early"><option value="early">Early access</option><option value="free">Free</option><option value="paid">Paid</option></select></label>
-          <div className="editor-note"><small>Editor note</small><p>Let the silence breathe one line longer before the letter appears.</p></div>
+          <div className="tool-tabs" role="tablist" aria-label="Writing assistant panels">
+            {(["Craft", "Notes", "Review"] as const).map((tab) => <button role="tab" aria-selected={toolTab === tab} className={toolTab === tab ? "active" : ""} onClick={() => setToolTab(tab)} key={tab}>{tab}</button>)}
+          </div>
+          <section className="writing-goal"><div><span className="eyebrow">Today&apos;s goal</span><strong>{wordCount.toLocaleString()} <small>/ {goal.toLocaleString()}</small></strong></div><span>{progress}%</span><div className="goal-meter"><i style={{ width: `${progress}%` }} /></div><small>{Math.max(0, goal - wordCount).toLocaleString()} words to go</small></section>
+          {toolTab === "Craft" && <>
+            <section className="chapter-settings"><span className="eyebrow">Manuscript format</span><label>Preset<select value={manuscriptStyle} onChange={(event) => setManuscriptStyle(event.target.value)}><option>Novel manuscript</option><option>Web serial</option><option>Short story</option><option>Screenplay draft</option></select></label><label>Line spacing<select value={lineSpacing} onChange={(event) => setLineSpacing(event.target.value)}><option value="1.6">Compact · 1.6</option><option value="1.8">Comfortable · 1.8</option><option value="2">Submission · Double</option></select></label></section>
+            <div className="quick-tools"><span className="eyebrow">Story tools</span><button onClick={() => onToast("Character bible opened")}><span>Characters</span><small>6 profiles</small></button><button onClick={() => onToast("Find and replace opened")}><span>Find & replace</span><small>⌘ F</small></button><button onClick={() => onToast("Manuscript consistency check started")}><span>Consistency check</span><small>Names · tense</small></button></div>
+          </>}
+          {toolTab === "Notes" && <>
+            <div className="editor-note"><small>Chapter intention</small><p>Let the reader feel the long wait before the answer arrives.</p><button onClick={() => onToast("Chapter note editor opened")}>Edit note</button></div>
+            <div className="quick-tools"><span className="eyebrow">Reference notes</span><button onClick={() => onToast("Research board opened")}><span>Research board</span><small>12 notes</small></button><button onClick={() => onToast("Timeline opened")}><span>Story timeline</span><small>8 events</small></button><button onClick={() => onToast("Location notes opened")}><span>Places</span><small>4 locations</small></button></div>
+          </>}
+          {toolTab === "Review" && <>
+            <div className="editor-note"><small>Editor note</small><p>Let the silence breathe one line longer before the letter appears.</p><button onClick={() => onToast("Editor note marked as resolved")}>Mark resolved</button></div>
+            <div className="revision-check"><span className="eyebrow">Revision check</span><label><input type="checkbox" defaultChecked /> Opening has a hook</label><label><input type="checkbox" /> Check pacing before publishing</label><label><input type="checkbox" /> Dialogue punctuation is consistent</label></div>
+            <button className="export-manuscript" onClick={() => onToast("Export options opened")}>Export manuscript <span>DOCX · PDF · EPUB</span></button>
+          </>}
+          <div className="writer-encouragement"><span>12 day rhythm</span><p>You do not need a perfect chapter today. Keep the scene moving.</p></div>
         </aside>
       </div>
     </div>
@@ -754,7 +836,7 @@ function ProfileView({ onNavigate }: { onNavigate: (view: View) => void }) {
       </section>
       <section className="metric-strip profile-metrics"><div><strong>12</strong><span>day streak</span></div><div><strong>3</strong><span>authored books</span></div><div><strong>42</strong><span>saved stories</span></div><div><strong>1.2k</strong><span>followers</span></div></section>
       <section className="profile-grid">
-        <div><div className="section-heading"><div><span className="eyebrow">Reading history</span><h2>Your recent pages</h2></div><button onClick={() => onNavigate("library")}>Library</button></div><LibraryViewMini /></div>
+        <div><div className="section-heading"><div><span className="eyebrow">Reading history</span><h2>Your recent pages</h2></div><button onClick={() => onNavigate("home")}>Open home</button></div><LibraryViewMini /></div>
         <aside className="profile-achievements"><span className="eyebrow">Milestones</span><h2>Quiet progress</h2><div><strong>100 chapters</strong><small>Read across 18 writers</small></div><div><strong>7 week rhythm</strong><small>Your longest writing streak</small></div></aside>
       </section>
     </div>
@@ -771,18 +853,93 @@ function LibraryViewMini() {
 }
 
 function SettingsView({ onToast }: { onToast: (message: string) => void }) {
+  const tabs = ["Account", "Reading", "Writing", "Notifications", "Appearance", "Privacy", "Billing"] as const;
+  type SettingsTab = (typeof tabs)[number];
+  const [activeTab, setActiveTab] = useState<SettingsTab>("Account");
   const [quietMode, setQuietMode] = useState(true);
   const [digest, setDigest] = useState(false);
+  const [smartTypography, setSmartTypography] = useState(true);
+  const [autosave, setAutosave] = useState(true);
+  const [readerActivity, setReaderActivity] = useState(true);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  const toggleRow = (
+    title: string,
+    description: string,
+    value: boolean,
+    setValue: (value: boolean) => void,
+  ) => (
+    <div className="setting-row">
+      <div><strong>{title}</strong><small>{description}</small></div>
+      <button className={`toggle ${value ? "on" : ""}`} onClick={() => setValue(!value)} aria-pressed={value}><span /></button>
+    </div>
+  );
+
+  function settingsPanel() {
+    if (activeTab === "Account") {
+      return <>
+        <div className="settings-profile"><span className="profile-monogram small">র</span><div><strong>Rumana Kabir</strong><small>@rumana · rumana@pristha.app</small></div><button className="secondary-button" onClick={() => onToast("Profile editor opened")}>Edit profile</button></div>
+        <div className="setting-row"><div><strong>Display name</strong><small>Shown on stories, comments, and your public profile.</small></div><button className="inline-select">Rumana Kabir <span>›</span></button></div>
+        <div className="setting-row"><div><strong>Interface language</strong><small>English interface with Bengali literary content.</small></div><button className="inline-select">EN / বাংলা <span>⌄</span></button></div>
+        <div className="setting-row"><div><strong>Connected publishing house</strong><small>Batayan Prokashoni · Editor access</small></div><button className="inline-select">Manage <span>›</span></button></div>
+      </>;
+    }
+    if (activeTab === "Reading") {
+      return <>
+        {toggleRow("Quiet reading mode", "Hide social activity while you are inside a chapter.", quietMode, setQuietMode)}
+        {toggleRow("Weekly reading digest", "A calm Sunday summary of saved and unfinished stories.", digest, setDigest)}
+        <div className="setting-row"><div><strong>Default text size</strong><small>Applied whenever a book does not specify a preference.</small></div><button className="inline-select">Comfortable <span>⌄</span></button></div>
+        <div className="setting-row"><div><strong>Reading direction</strong><small>Choose the default page and chapter flow.</small></div><button className="inline-select">Vertical <span>⌄</span></button></div>
+      </>;
+    }
+    if (activeTab === "Writing") {
+      return <>
+        {toggleRow("Smart typography", "Automatically use curly quotes, em dashes, and Bengali punctuation.", smartTypography, setSmartTypography)}
+        {toggleRow("Continuous autosave", "Keep a recoverable version history while you write.", autosave, setAutosave)}
+        <div className="setting-row"><div><strong>Default manuscript style</strong><small>New chapters begin with these professional formatting rules.</small></div><button className="inline-select">Book manuscript <span>⌄</span></button></div>
+        <div className="setting-row"><div><strong>Daily writing goal</strong><small>A private, encouraging target—not a public score.</small></div><button className="inline-select">1,500 words <span>⌄</span></button></div>
+      </>;
+    }
+    if (activeTab === "Notifications") {
+      return <>
+        {toggleRow("Reader activity", "Thoughtful summaries of follows, saves, and meaningful comments.", readerActivity, setReaderActivity)}
+        {toggleRow("Weekly digest", "Writing progress and reader momentum in one email.", digest, setDigest)}
+        <div className="setting-row"><div><strong>Editorial updates</strong><small>Review notes, submission decisions, and publishing deadlines.</small></div><button className="inline-select">Email + in app <span>⌄</span></button></div>
+        <div className="setting-row"><div><strong>Quiet hours</strong><small>Pause non-essential alerts while you rest or write.</small></div><button className="inline-select">10 PM–8 AM <span>⌄</span></button></div>
+      </>;
+    }
+    if (activeTab === "Appearance") {
+      return <>
+        <div className="setting-row"><div><strong>Theme</strong><small>Choose an eye-comfortable reading and writing surface.</small></div><button className="inline-select">Warm ivory <span>⌄</span></button></div>
+        <div className="setting-row"><div><strong>Interface density</strong><small>Controls spacing in lists, tables, and tool panels.</small></div><button className="inline-select">Comfortable <span>⌄</span></button></div>
+        {toggleRow("Reduce motion", "Limit non-essential transitions and animated feedback.", reducedMotion, setReducedMotion)}
+      </>;
+    }
+    if (activeTab === "Privacy") {
+      return <>
+        <div className="setting-row"><div><strong>Profile visibility</strong><small>Control who can find your reading and writing profile.</small></div><button className="inline-select">Public <span>⌄</span></button></div>
+        <div className="setting-row"><div><strong>Reading activity</strong><small>Choose whether writers can see your name in reader insights.</small></div><button className="inline-select">Private <span>⌄</span></button></div>
+        <div className="setting-row"><div><strong>Active sessions</strong><small>Review devices currently signed into your Pristha account.</small></div><button className="inline-select">2 devices <span>›</span></button></div>
+        <div className="setting-row"><div><strong>Download your data</strong><small>Export your manuscripts, library, highlights, and account history.</small></div><button className="inline-select">Request export <span>›</span></button></div>
+      </>;
+    }
+    return <>
+      <div className="billing-summary"><span className="eyebrow">Current plan</span><h3>Writer Pro</h3><p>Professional writing tools, version history, analytics, and publishing-house collaboration.</p><strong>৳499 <small>/ month</small></strong></div>
+      <div className="setting-row"><div><strong>Payment method</strong><small>Visa ending in 2048 · expires 08/29</small></div><button className="inline-select">Update <span>›</span></button></div>
+      <div className="setting-row"><div><strong>Invoices</strong><small>View and download your past billing documents.</small></div><button className="inline-select">View invoices <span>›</span></button></div>
+    </>;
+  }
+
   return (
     <div className="product-page settings-page page-enter">
       <PageHeader eyebrow="Personal preferences" title="Settings" subtitle="Shape Pristha around the way you read, write, and rest." />
       <div className="settings-layout">
-        <nav>{["Profile", "Reading", "Writing", "Notifications", "Billing"].map((item, index) => <button className={index === 0 ? "active" : ""} key={item}>{item}</button>)}</nav>
-        <section>
-          <div className="settings-profile"><span className="profile-monogram small">র</span><div><strong>Rumana Kabir</strong><small>@rumana · rumana@pristha.app</small></div><button className="secondary-button" onClick={() => onToast("Profile editor opened")}>Edit profile</button></div>
-          <div className="setting-row"><div><strong>Quiet reading mode</strong><small>Hide social activity while you are inside a chapter.</small></div><button className={`toggle ${quietMode ? "on" : ""}`} onClick={() => setQuietMode(!quietMode)} aria-pressed={quietMode}><span /></button></div>
-          <div className="setting-row"><div><strong>Weekly reading digest</strong><small>A calm Sunday summary of saved and unfinished stories.</small></div><button className={`toggle ${digest ? "on" : ""}`} onClick={() => setDigest(!digest)} aria-pressed={digest}><span /></button></div>
-          <div className="setting-row"><div><strong>Interface language</strong><small>English with Bengali literary content.</small></div><button className="inline-select">EN / বাংলা <span>⌄</span></button></div>
+        <nav aria-label="Settings sections">
+          {tabs.map((item) => <button className={activeTab === item ? "active" : ""} onClick={() => setActiveTab(item)} key={item}>{item}</button>)}
+        </nav>
+        <section className="settings-panel">
+          <div className="settings-panel-head"><span className="eyebrow">Preferences</span><h2>{activeTab}</h2></div>
+          {settingsPanel()}
           <button className="primary-button save-settings" onClick={() => onToast("Preferences saved")}>Save preferences</button>
         </section>
       </div>
