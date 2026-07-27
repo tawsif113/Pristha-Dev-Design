@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 type View =
   | "home"
   | "discover"
+  | "book-detail"
+  | "reader"
   | "studio"
   | "dashboard"
   | "audience"
@@ -159,12 +161,17 @@ export default function Home() {
     setView(next);
     setSidebarOpen(false);
     setQuery("");
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function switchWorkspace(next: "writer" | "house") {
     setWorkspace(next);
     setWorkspaceMenu(false);
     navigate(next === "writer" ? "studio" : "house-overview");
+  }
+
+  if (view === "reader") {
+    return <ReaderCanvas onBack={() => navigate("book-detail")} />;
   }
 
   return (
@@ -501,6 +508,7 @@ function PlaceholderView({
 }) {
   if (view === "home") return <ReaderHome onNavigate={onNavigate} />;
   if (view === "discover") return <DiscoverView onNavigate={onNavigate} />;
+  if (view === "book-detail") return <BookDetailView onNavigate={onNavigate} onToast={onToast} />;
   if (view === "dashboard") return <DashboardView onToast={onToast} />;
   if (view === "audience") return <AudienceView />;
   if (view === "editor") return <EditorView onToast={onToast} />;
@@ -559,7 +567,7 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
             <div className="reading-progress"><span /></div>
             <small>38% · page 6 of 16 · 4 min left</small>
           </div>
-          <button className="primary-button" onClick={() => onNavigate("home")}>
+          <button className="primary-button" onClick={() => onNavigate("reader")}>
             Resume <Icon name="arrow" size={18} />
           </button>
         </div>
@@ -572,7 +580,7 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
         </div>
         <div className="cover-grid">
           {recommendations.map((book) => (
-            <button key={book.title} onClick={() => onNavigate("home")}>
+            <button key={book.title} onClick={() => onNavigate("book-detail")}>
               <span className={`discovery-cover ${book.tone}`}><b>{book.initial}</b><small>PRISTHA</small></span>
               <span><strong lang="bn">{book.title}</strong><small lang="bn">{book.author}</small></span>
             </button>
@@ -583,7 +591,7 @@ function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
       <section className="feed-line">
         <span className="profile-portrait">ন</span>
         <div><strong lang="bn">নুসরাত আহমেদ নতুন একটি অধ্যায় প্রকাশ করেছেন</strong><small>চিঠি · Chapter 08 · 22 minutes ago</small></div>
-        <button onClick={() => onNavigate("home")}>Read chapter <Icon name="arrow" size={16} /></button>
+        <button onClick={() => onNavigate("reader")}>Read chapter <Icon name="arrow" size={16} /></button>
       </section>
       <HomeLibrary onNavigate={onNavigate} />
     </div>
@@ -606,7 +614,7 @@ function HomeLibrary({ onNavigate }: { onNavigate: (view: View) => void }) {
         <div className="section-heading"><div><span className="eyebrow">Personal shelf</span><h2>All books</h2></div><button>Sort by recent</button></div>
         <div className="shelf-list">
           {shelf.map((book) => (
-            <button key={book.title} onClick={() => onNavigate("home")}>
+            <button key={book.title} onClick={() => onNavigate("book-detail")}>
               <span className={`book-cover ${book.tone === "saffron" ? "saffron" : book.tone === "teal" ? "teal" : ""}`}><b>{book.initial}</b><small>PRISTHA</small></span>
               <span><strong lang="bn">{book.title}</strong><small lang="bn">{book.author}</small></span>
               <em>{book.status}</em>
@@ -650,7 +658,7 @@ function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
       </div>
       <div className="discover-grid">
         {books.map((book, index) => (
-          <button key={book.title} className={index === 0 ? "featured" : ""} onClick={() => onNavigate("home")}>
+          <button key={book.title} className={index === 0 ? "featured" : ""} onClick={() => onNavigate("book-detail")}>
             <span className={`discovery-cover ${book.tone}`}><b lang="bn">{book.initial}</b><small>PRISTHA</small></span>
             <span className="discover-copy">
               <small>{book.tag}</small>
@@ -661,6 +669,227 @@ function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
           </button>
         ))}
       </div>
+    </div>
+  );
+}
+
+function BookDetailView({
+  onNavigate,
+  onToast,
+}: {
+  onNavigate: (view: View) => void;
+  onToast: (message: string) => void;
+}) {
+  const [saved, setSaved] = useState(true);
+  const chapters = [
+    { number: "01", title: "যে চিঠি পৌঁছায়নি", time: "12 min read", access: "free" },
+    { number: "02", title: "জানালার পাশে অপেক্ষা", time: "15 min read", access: "free" },
+    { number: "03", title: "নদীর ওপারে", time: "18 min read", access: "free" },
+    { number: "04", title: "দেরি", time: "14 min read", access: "owned", progress: "38%" },
+    { number: "05", title: "অপরিচিত হাতের লেখা", time: "16 min read", access: "locked" },
+    { number: "06", title: "ফেরার ঠিকানা", time: "19 min read", access: "locked" },
+  ];
+
+  return (
+    <div className="product-page book-detail-page page-enter">
+      <button className="book-back-link" onClick={() => onNavigate("home")}>
+        <span aria-hidden="true">←</span> Back to Home
+      </button>
+
+      <section className="book-detail-hero">
+        <div className="book-detail-cover" aria-label="Cover of Chithi">
+          <span className="cover-kicker">A SERIAL NOVEL</span>
+          <span className="cover-orbit orbit-one" />
+          <span className="cover-orbit orbit-two" />
+          <strong lang="bn">চিঠি</strong>
+          <small>CHITHI</small>
+          <em lang="bn">নুসরাত আহমেদ</em>
+        </div>
+
+        <div className="book-detail-copy">
+          <div className="book-badges">
+            <span>Literary fiction</span>
+            <span>Ongoing serial</span>
+          </div>
+          <h1 lang="bn">চিঠি</h1>
+          <button className="book-author" onClick={() => onNavigate("profile")}>
+            <span className="author-avatar">ন</span>
+            <span><small>Written by</small><strong lang="bn">নুসরাত আহমেদ</strong></span>
+          </button>
+          <div className="book-rating" aria-label="Rated 4.8 out of 5 by 1,240 readers">
+            <span aria-hidden="true">★</span>
+            <strong>4.8</strong>
+            <small>1.2k reader ratings</small>
+          </div>
+          <p className="book-synopsis" lang="bn">
+            পুরোনো ঢাকার একটি বন্ধ ডাকঘরে রাইসা এমন সব চিঠি খুঁজে পায়, যেগুলো কখনো
+            প্রাপকের কাছে পৌঁছায়নি। প্রতিটি খাম খুলতেই শহরের হারিয়ে যাওয়া মানুষ,
+            অসমাপ্ত ভালোবাসা আর তার নিজের পরিবারের চাপা পড়া ইতিহাস এক সুতোয় জড়াতে থাকে।
+          </p>
+          <div className="book-actions">
+            <button className="primary-button" onClick={() => onNavigate("reader")}>
+              Continue reading <Icon name="arrow" size={18} />
+            </button>
+            <button
+              className={`secondary-button save-book ${saved ? "is-saved" : ""}`}
+              onClick={() => {
+                setSaved((current) => !current);
+                onToast(saved ? "Removed from your library" : "Saved to your library");
+              }}
+              aria-pressed={saved}
+            >
+              <span aria-hidden="true">{saved ? "✓" : "+"}</span>
+              {saved ? "In your library" : "Add to library"}
+            </button>
+          </div>
+          <dl className="book-facts">
+            <div><dt>12</dt><dd>Chapters</dd></div>
+            <div><dt>2h 46m</dt><dd>Total reading</dd></div>
+            <div><dt>Weekly</dt><dd>New chapters</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section className="chapter-index" aria-labelledby="chapter-index-title">
+        <div className="chapter-index-head">
+          <div>
+            <span className="eyebrow">Inside this book</span>
+            <h2 id="chapter-index-title">Chapter index</h2>
+          </div>
+          <div className="book-overall-progress">
+            <span><strong>38%</strong> read</span>
+            <i><b /></i>
+          </div>
+        </div>
+        <div className="chapter-index-list">
+          {chapters.map((chapter) => {
+            const locked = chapter.access === "locked";
+            return (
+              <button
+                key={chapter.number}
+                className={chapter.access === "owned" ? "is-current" : ""}
+                onClick={() => locked ? onToast("This chapter is not available yet") : onNavigate("reader")}
+              >
+                <span className="index-number">{chapter.number}</span>
+                <span className="index-copy">
+                  <strong lang="bn">{chapter.title}</strong>
+                  <small>{chapter.time}{chapter.progress ? ` · ${chapter.progress} complete` : ""}</small>
+                </span>
+                <span className={`access-label ${chapter.access}`}>
+                  {locked ? <><span aria-hidden="true">♙</span> Locked</> : chapter.access === "free" ? "Free" : "Continue"}
+                </span>
+                <span className="chapter-row-arrow" aria-hidden="true">→</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ReaderCanvas({ onBack }: { onBack: () => void }) {
+  const [fontSize, setFontSize] = useState(20);
+  const [fontStyle, setFontStyle] = useState<"serif" | "sans">("serif");
+  const [theme, setTheme] = useState<"paper" | "light" | "night">("paper");
+  const [progress, setProgress] = useState(38);
+
+  useEffect(() => {
+    function updateProgress() {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+      const chapterProgress = window.scrollY / scrollable;
+      setProgress(Math.min(46, Math.max(38, Math.round(38 + chapterProgress * 8))));
+    }
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+    return () => window.removeEventListener("scroll", updateProgress);
+  }, []);
+
+  return (
+    <div className={`reader-canvas reader-theme-${theme}`}>
+      <header className="reader-toolbar">
+        <button className="reader-back" onClick={onBack} aria-label="Back to book details">
+          <span aria-hidden="true">←</span><span>Book details</span>
+        </button>
+        <div className="reader-control-group text-scale" aria-label="Text size">
+          <button onClick={() => setFontSize((size) => Math.max(17, size - 1))} aria-label="Decrease text size">A−</button>
+          <button onClick={() => setFontSize((size) => Math.min(25, size + 1))} aria-label="Increase text size">A+</button>
+        </div>
+        <div className="reader-control-group font-choice" aria-label="Font family">
+          <button className={fontStyle === "serif" ? "active" : ""} onClick={() => setFontStyle("serif")} aria-pressed={fontStyle === "serif"}>Serif</button>
+          <button className={fontStyle === "sans" ? "active" : ""} onClick={() => setFontStyle("sans")} aria-pressed={fontStyle === "sans"}>Sans</button>
+        </div>
+        <div className="reader-control-group theme-choice" aria-label="Reading theme">
+          {(["light", "paper", "night"] as const).map((item) => (
+            <button
+              key={item}
+              className={`theme-dot ${item} ${theme === item ? "active" : ""}`}
+              onClick={() => setTheme(item)}
+              aria-label={`${item} reading theme`}
+              aria-pressed={theme === item}
+            />
+          ))}
+        </div>
+        <button className="reader-more" aria-label="More reading options">•••</button>
+      </header>
+
+      <main className={`reader-manuscript ${fontStyle}`} style={{ fontSize: `${fontSize}px` }}>
+        <header className="reader-chapter-head">
+          <span>Part I · Chapter 4</span>
+          <h1 lang="bn">দেরি</h1>
+          <i />
+        </header>
+        <article lang="bn">
+          <p>
+            ডাকঘরের ভেতরটা বাইরে থেকে যতটা ছোট মনে হয়েছিল, আসলে ততটা নয়। অন্ধকারে
+            সারি সারি কাঠের তাক দূর পর্যন্ত চলে গেছে—প্রতিটি তাকে ধুলো জমা খাম, হলদে
+            পোস্টকার্ড আর নামহীন পার্সেল। রাইসা দরজার কাছে দাঁড়িয়ে কিছুক্ষণ শুধু
+            পুরোনো কাগজের গন্ধ শুনল।
+          </p>
+          <p>
+            “এগুলো কেউ নিতে আসেনি?” সে ফিসফিস করে জিজ্ঞেস করল। বৃদ্ধ পোস্টমাস্টার
+            হাসলেন না। কেবল চাবির গোছা থেকে একটি ছোট পিতলের চাবি আলাদা করে তার
+            হাতের তালুতে রাখলেন।
+          </p>
+          <p>
+            “কিছু চিঠি পৌঁছাতে দেরি হয়,” তিনি বললেন। “আর কিছু চিঠি ঠিক সময়ে পৌঁছালে
+            মানুষ প্রস্তুত থাকে না। তাই তারা এখানে অপেক্ষা করে।”
+          </p>
+          <p>
+            রাইসা তৃতীয় তাকের শেষ খামটি টেনে নিল। ওপরে কোনো ডাকটিকিট নেই, প্রাপকের
+            নামও নেই। শুধু তার মায়ের হাতের লেখায় একটি তারিখ—সতেরো বছর আগের সেই
+            বিকেল, যেদিন বাবা বাড়ি থেকে বেরিয়ে আর ফেরেননি।
+          </p>
+          <p>
+            খামের ভাঁজে আঙুল রাখতেই বাইরে বৃষ্টি শুরু হলো। টিনের চালে শব্দ বাড়তে
+            লাগল, যেন শহরের সব বন্ধ দরজা একসঙ্গে কথা বলতে চাইছে। রাইসা চেয়ারে বসল,
+            কিন্তু খাম খুলল না। কিছু সত্যের সামনে পৌঁছানো আর তাকে গ্রহণ করা একই
+            ব্যাপার নয়।
+          </p>
+          <p>
+            বৃদ্ধ লোকটি বাতি জ্বালিয়ে তার দিকে ঠেলে দিলেন। “দেরি হয়েছে,” তিনি
+            শান্তভাবে বললেন, “কিন্তু শেষ হয়ে যায়নি।”
+          </p>
+          <p>
+            রাইসা অবশেষে কাগজ কাটার ছুরিটি তুলে নিল। খামের কিনারা খুলে যেতেই ভেতর
+            থেকে একটি শুকনো শিউলি ফুল টেবিলের ওপর পড়ল। তার নিচে ছিল মাত্র একটি
+            বাক্য: <em>যদি সে কখনো খুঁজতে আসে, তাকে নদীর ওপারের বাড়িটির কথা বলো।</em>
+          </p>
+        </article>
+        <footer className="reader-next">
+          <span>End of chapter 4</span>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            Next chapter <span aria-hidden="true">→</span>
+          </button>
+        </footer>
+      </main>
+
+      <footer className="reader-progress-dock">
+        <span>Chapter 4</span>
+        <i><b style={{ width: `${progress}%` }} /></i>
+        <strong>{progress}%</strong>
+      </footer>
     </div>
   );
 }
