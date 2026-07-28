@@ -673,38 +673,121 @@ function HomeLibrary({ onNavigate }: { onNavigate: (view: View) => void }) {
 }
 
 function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
-  const [activeGenre, setActiveGenre] = useState("All");
+  const [activeFormat, setActiveFormat] = useState("All stories");
+  const [activeGenre, setActiveGenre] = useState("All genres");
   const [discoveryQuery, setDiscoveryQuery] = useState("");
+  const [selectedShelf, setSelectedShelf] = useState<string | null>(null);
   const books = [
-    { title: "অচেনা জানালা", author: "সায়মা রহমান", genre: "Literary", tone: "umber", initial: "অ", rating: "4.9", readTime: "3h 10m", detail: "book-detail" as View },
-    { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", genre: "Magical realism", tone: "sage", initial: "ম", rating: "4.8", readTime: "2h 35m", detail: "book-detail-no-new" as View },
-    { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", genre: "Mystery", tone: "navy", initial: "শ", rating: "4.7", readTime: "4h 05m", detail: "book-detail-no-new" as View },
-    { title: "নীল দরজা", author: "রাইসা করিম", genre: "Romance", tone: "teal", initial: "নী", rating: "4.6", readTime: "2h 20m", detail: "book-detail" as View },
-    { title: "শহরের নিচে", author: "নাবিল হাসান", genre: "Speculative", tone: "plum", initial: "শ", rating: "4.5", readTime: "3h 45m", detail: "book-detail-no-new" as View },
-    { title: "ফিরে আসার গান", author: "ইশরাত জাহান", genre: "Literary", tone: "teal", initial: "ফি", rating: "4.8", readTime: "2h 55m", detail: "book-detail" as View },
+    { id: "unknown-window", title: "অচেনা জানালা", author: "সায়মা রহমান", genre: "Literary", format: "Complete", tone: "umber", initial: "অ", rating: "4.9", ratings: "2.4k", release: "3h 10m", detail: "book-detail" as View, isNew: false },
+    { id: "house-in-clouds", title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", genre: "Magical realism", format: "Complete", tone: "sage", initial: "ম", rating: "4.8", ratings: "1.8k", release: "2h 35m", detail: "book-detail-no-new" as View, isNew: false },
+    { id: "last-train", title: "শেষ ট্রেন", author: "তাহমিনা রেজা", genre: "Mystery", format: "Complete", tone: "navy", initial: "শে", rating: "4.7", ratings: "3.1k", release: "4h 05m", detail: "book-detail-no-new" as View, isNew: false },
+    { id: "blue-door", title: "নীল দরজা", author: "রাইসা করিম", genre: "Romance", format: "Ongoing", tone: "teal", initial: "নী", rating: "4.6", ratings: "987", release: "11 chapters", detail: "book-detail" as View, isNew: true },
+    { id: "under-the-city", title: "শহরের নিচে", author: "নাবিল হাসান", genre: "Speculative", format: "Ongoing", tone: "plum", initial: "শ", rating: "4.5", ratings: "764", release: "8 chapters", detail: "book-detail-no-new" as View, isNew: false },
+    { id: "song-of-return", title: "ফিরে আসার গান", author: "ইশরাত জাহান", genre: "Literary", format: "Complete", tone: "clay", initial: "ফি", rating: "4.8", ratings: "1.2k", release: "2h 55m", detail: "book-detail" as View, isNew: false },
+    { id: "letters", title: "চিঠি", author: "নুসরাত আহমেদ", genre: "Literary", format: "Ongoing", tone: "saffron-deep", initial: "চি", rating: "4.9", ratings: "4.6k", release: "12 chapters", detail: "book-detail" as View, isNew: true },
+    { id: "rain-at-noon", title: "দুপুরের বৃষ্টি", author: "আদিবা নওশীন", genre: "Romance", format: "Short read", tone: "mist", initial: "দু", rating: "4.7", ratings: "642", release: "48 min", detail: "book-detail-no-new" as View, isNew: false },
+    { id: "borrowed-sky", title: "ধার করা আকাশ", author: "ফারহান কবির", genre: "Literary", format: "Short read", tone: "indigo", initial: "ধা", rating: "4.6", ratings: "518", release: "55 min", detail: "book-detail" as View, isNew: false },
+    { id: "silent-map", title: "নীরব মানচিত্র", author: "রাশেদা তাবাসসুম", genre: "Mystery", format: "Ongoing", tone: "moss", initial: "নী", rating: "4.8", ratings: "1.1k", release: "9 chapters", detail: "book-detail-no-new" as View, isNew: true },
+    { id: "winter-veranda", title: "শীতের বারান্দা", author: "তানিয়া হক", genre: "Romance", format: "Complete", tone: "rose", initial: "শী", rating: "4.5", ratings: "834", release: "2h 15m", detail: "book-detail-no-new" as View, isNew: false },
+    { id: "after-the-river", title: "নদীর ওপারে", author: "মাহিন আলম", genre: "Magical realism", format: "Short read", tone: "ochre", initial: "ন", rating: "4.7", ratings: "703", release: "42 min", detail: "book-detail" as View, isNew: false },
   ];
-  const genres = ["All", "Literary", "Romance", "Mystery", "Magical realism"];
+  const formats = ["All stories", "Complete", "Ongoing", "Short read"];
+  const genres = ["All genres", "Literary", "Romance", "Mystery", "Magical realism", "Speculative"];
+  const shelves = [
+    {
+      id: "for-you",
+      eyebrow: "Selected for you",
+      title: "Because you enjoy quiet, literary stories",
+      description: "Character-led books with intimate voices and a lingering sense of place.",
+      books: ["unknown-window", "letters", "song-of-return", "house-in-clouds", "rain-at-noon", "borrowed-sky"],
+    },
+    {
+      id: "popular",
+      eyebrow: "What readers love",
+      title: "Popular across Pristha this week",
+      description: "The stories readers are saving, finishing, and recommending right now.",
+      books: ["last-train", "letters", "blue-door", "silent-map", "winter-veranda", "under-the-city"],
+    },
+    {
+      id: "fresh",
+      eyebrow: "Fresh on the shelf",
+      title: "New chapters and recent releases",
+      description: "Recently published work from voices you may not have met yet.",
+      books: ["silent-map", "blue-door", "after-the-river", "rain-at-noon", "under-the-city", "borrowed-sky"],
+    },
+  ];
   const normalizedQuery = discoveryQuery.trim().toLocaleLowerCase();
+  const selectedShelfData = shelves.find((shelf) => shelf.id === selectedShelf);
   const visibleBooks = books.filter((book) => {
-    const matchesGenre = activeGenre === "All" || book.genre === activeGenre;
+    const matchesShelf = !selectedShelfData || selectedShelfData.books.includes(book.id);
+    const matchesFormat = activeFormat === "All stories" || book.format === activeFormat;
+    const matchesGenre = activeGenre === "All genres" || book.genre === activeGenre;
     const matchesQuery =
       !normalizedQuery ||
-      `${book.title} ${book.author} ${book.genre}`.toLocaleLowerCase().includes(normalizedQuery);
-    return matchesGenre && matchesQuery;
+      `${book.title} ${book.author} ${book.genre} ${book.format}`.toLocaleLowerCase().includes(normalizedQuery);
+    return matchesShelf && matchesFormat && matchesGenre && matchesQuery;
   });
-  const isDefaultView = activeGenre === "All" && !normalizedQuery;
+  const isDefaultView =
+    activeFormat === "All stories" &&
+    activeGenre === "All genres" &&
+    !normalizedQuery &&
+    !selectedShelf;
 
   function resetDiscovery() {
-    setActiveGenre("All");
+    setActiveFormat("All stories");
+    setActiveGenre("All genres");
     setDiscoveryQuery("");
+    setSelectedShelf(null);
+  }
+
+  function showShelf(shelfId: string) {
+    setSelectedShelf(shelfId);
+    setActiveFormat("All stories");
+    setActiveGenre("All genres");
+    setDiscoveryQuery("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function scrollShelf(shelfId: string, direction: -1 | 1) {
+    document
+      .getElementById(`discover-rail-${shelfId}`)
+      ?.scrollBy({ left: direction * 520, behavior: "smooth" });
+  }
+
+  function DiscoveryBookCard({ book }: { book: (typeof books)[number] }) {
+    return (
+      <button className="discover-book-card" onClick={() => onNavigate(book.detail)}>
+        <span className={`discovery-cover ${book.tone}`}>
+          {book.isNew && <i>New</i>}
+          <b lang="bn">{book.initial}</b>
+          <small>PRISTHA</small>
+        </span>
+        <span className="discover-book-copy">
+          <strong lang="bn">{book.title}</strong>
+          <em lang="bn">{book.author}</em>
+          <span className="discover-rating">
+            <b>★ {book.rating}</b>
+            <small>({book.ratings})</small>
+          </span>
+          <small>{book.format} · {book.release}</small>
+        </span>
+      </button>
+    );
   }
 
   return (
     <div className="product-page discover-page page-enter">
       <header className="discover-header">
-        <span className="eyebrow">Discover</span>
-        <h1>Find a story for tonight.</h1>
-        <p>Search by title or author, or choose the kind of story you feel like reading.</p>
+        <div>
+          <span className="eyebrow">Discover</span>
+          <h1>Stories worth finding.</h1>
+          <p>Browse thoughtful selections, current favourites, and new Bengali voices.</p>
+        </div>
+        {!isDefaultView && (
+          <button type="button" className="discover-back" onClick={resetDiscovery}>
+            <Icon name="arrow" size={16} /> All collections
+          </button>
+        )}
       </header>
 
       <section className="discover-controls" aria-label="Find and filter books">
@@ -715,8 +798,11 @@ function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
             id="discover-search-input"
             type="search"
             value={discoveryQuery}
-            onChange={(event) => setDiscoveryQuery(event.target.value)}
-            placeholder="Search by book, author, or genre"
+            onChange={(event) => {
+              setDiscoveryQuery(event.target.value);
+              setSelectedShelf(null);
+            }}
+            placeholder="Search books, authors, or genres"
           />
           {discoveryQuery && (
             <button type="button" onClick={() => setDiscoveryQuery("")} aria-label="Clear search">
@@ -724,77 +810,111 @@ function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
             </button>
           )}
         </div>
-        <div className="discover-genres">
-          <span>Browse</span>
-          <div role="group" aria-label="Filter by genre">
-            {genres.map((genre) => (
+        <div className="discover-filter-row">
+          <div className="discover-formats">
+            <span>Filter by</span>
+            <div role="group" aria-label="Filter by story format">
+              {formats.map((format) => (
+                <button
+                  type="button"
+                  className={activeFormat === format ? "active" : ""}
+                  aria-pressed={activeFormat === format}
+                  onClick={() => {
+                    setActiveFormat(format);
+                    setSelectedShelf(null);
+                  }}
+                  key={format}
+                >
+                  {format}
+                </button>
+              ))}
+            </div>
+          </div>
+          <label className="discover-genre-select">
+            <span>Genre</span>
+            <select
+              value={activeGenre}
+              onChange={(event) => {
+                setActiveGenre(event.target.value);
+                setSelectedShelf(null);
+              }}
+            >
+              {genres.map((genre) => (
+                <option value={genre} key={genre}>{genre}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </section>
+
+      {isDefaultView ? (
+        <div className="discover-shelves">
+          {shelves.map((shelf) => (
+            <section className="discover-shelf" aria-labelledby={`discover-shelf-${shelf.id}`} key={shelf.id}>
+              <header className="discover-shelf-heading">
+                <div>
+                  <span className="eyebrow">{shelf.eyebrow}</span>
+                  <h2 id={`discover-shelf-${shelf.id}`}>{shelf.title}</h2>
+                  <p>{shelf.description}</p>
+                </div>
+                <div className="discover-shelf-actions">
+                  <button type="button" className="discover-see-all" onClick={() => showShelf(shelf.id)}>
+                    See all <Icon name="arrow" size={15} />
+                  </button>
+                  <span aria-label={`Scroll ${shelf.title}`}>
+                    <button type="button" onClick={() => scrollShelf(shelf.id, -1)} aria-label="Scroll left">
+                      <Icon name="arrow" size={15} />
+                    </button>
+                    <button type="button" onClick={() => scrollShelf(shelf.id, 1)} aria-label="Scroll right">
+                      <Icon name="arrow" size={15} />
+                    </button>
+                  </span>
+                </div>
+              </header>
+              <div className="discover-rail" id={`discover-rail-${shelf.id}`}>
+                {shelf.books.map((bookId) => {
+                  const book = books.find((item) => item.id === bookId);
+                  return book ? <DiscoveryBookCard book={book} key={book.id} /> : null;
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <section className="discover-results" aria-labelledby="discover-results-title">
+          <div className="discover-results-heading">
+            <div>
+              <span className="eyebrow">
+                {normalizedQuery ? "Search results" : selectedShelfData?.eyebrow || "Filtered shelf"}
+              </span>
+              <h2 id="discover-results-title">
+                {normalizedQuery
+                  ? `Results for “${discoveryQuery.trim()}”`
+                  : selectedShelfData?.title || (activeGenre !== "All genres" ? activeGenre : activeFormat)}
+              </h2>
+            </div>
+            <span>{visibleBooks.length} {visibleBooks.length === 1 ? "book" : "books"}</span>
+          </div>
+
+          {visibleBooks.length > 0 ? (
+            <div className="discover-results-grid">
+              {visibleBooks.map((book) => <DiscoveryBookCard book={book} key={book.id} />)}
+            </div>
+          ) : (
+            <div className="discover-empty">
+              <span>No books found</span>
+              <h3>Try a different title, format, or genre.</h3>
               <button
                 type="button"
-                className={activeGenre === genre ? "active" : ""}
-                aria-pressed={activeGenre === genre}
-                onClick={() => setActiveGenre(genre)}
-                key={genre}
+                className="secondary-button"
+                onClick={resetDiscovery}
               >
-                {genre}
+                Show all collections
               </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {isDefaultView && (
-        <section className="discover-feature" aria-labelledby="editors-pick-title">
-          <span className="discovery-cover umber"><b lang="bn">অ</b><small>PRISTHA</small></span>
-          <div>
-            <span className="eyebrow">Editor’s pick</span>
-            <h2 id="editors-pick-title" lang="bn">অচেনা জানালা</h2>
-            <p className="discover-author" lang="bn">সায়মা রহমান</p>
-            <p>A quiet, intimate novel about the lives we glimpse through other people’s windows—and the courage it takes to open our own.</p>
-            <div className="discover-feature-meta">
-              <span>Literary fiction</span>
-              <span>★ 4.9</span>
-              <span>3h 10m</span>
             </div>
-            <button className="primary-button" onClick={() => onNavigate("book-detail")}>
-              View book <Icon name="arrow" size={17} />
-            </button>
-          </div>
+          )}
         </section>
       )}
-
-      <section className="discover-results" aria-labelledby="discover-results-title">
-        <div className="discover-results-heading">
-          <div>
-            <span className="eyebrow">{isDefaultView ? "Browse the shelf" : "Search results"}</span>
-            <h2 id="discover-results-title">
-              {activeGenre === "All" ? "All stories" : activeGenre}
-            </h2>
-          </div>
-          <span>{visibleBooks.length} {visibleBooks.length === 1 ? "book" : "books"}</span>
-        </div>
-
-        {visibleBooks.length > 0 ? (
-          <div className="discover-grid">
-            {visibleBooks.map((book) => (
-              <button key={book.title} onClick={() => onNavigate(book.detail)}>
-                <span className={`discovery-cover ${book.tone}`}><b lang="bn">{book.initial}</b><small>PRISTHA</small></span>
-                <span className="discover-copy">
-                  <small>{book.genre}</small>
-                  <strong lang="bn">{book.title}</strong>
-                  <em lang="bn">{book.author}</em>
-                  <span>★ {book.rating} · {book.readTime}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-        ) : (
-          <div className="discover-empty">
-            <span>No books found</span>
-            <h3>Try a different title, author, or genre.</h3>
-            <button type="button" className="secondary-button" onClick={resetDiscovery}>Show all books</button>
-          </div>
-        )}
-      </section>
     </div>
   );
 }
