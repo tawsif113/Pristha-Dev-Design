@@ -677,15 +677,41 @@ function Studio({
           </div>
         </div>
 
-        <div className="streak">
-          <div><strong>12</strong><span>day writing streak</span></div>
-          <div className="week-line" aria-label="Seven day writing streak">
-            {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
-              <span key={`${day}-${index}`}><small>{day}</small><i className={index === 6 ? "today" : ""} /></span>
+        <aside className="streak" aria-labelledby="writing-streak-title">
+          <div className="streak-card-head">
+            <div>
+              <span id="writing-streak-title" lang="bn">লেখার ধারাবাহিকতা</span>
+              <i aria-hidden="true" />
+            </div>
+            <time dateTime="2026-07" lang="bn">জুলাই ২০২৬</time>
+          </div>
+
+          <div className="streak-count" aria-label="12 Days Streak">
+            <strong>12</strong>
+            <span>Days Streak</span>
+          </div>
+
+          <div
+            className="week-line"
+            role="progressbar"
+            aria-label="সাত দিনের লেখার অগ্রগতি"
+            aria-valuemin={0}
+            aria-valuemax={7}
+            aria-valuenow={7}
+          >
+            {["সোম", "মঙ্গল", "বুধ", "বৃহস্পতি", "শুক্র", "শনি", "রবি"].map((day, index) => (
+              <span key={day}>
+                <small lang="bn">{day}</small>
+                <i className={index === 6 ? "today" : ""} aria-hidden="true" />
+              </span>
             ))}
           </div>
-          <p>This week <span>·</span> 4,860 words</p>
-        </div>
+
+          <div className="streak-summary">
+            <p lang="bn">এই সপ্তাহে <span aria-hidden="true">·</span> ৪,৮৬০ শব্দ</p>
+            <time dateTime="2026-07-22/2026-07-28" lang="bn">২২–২৮ জুলাই, ২০২৬</time>
+          </div>
+        </aside>
       </section>
 
       <section className="metric-strip" aria-label="Writing overview">
