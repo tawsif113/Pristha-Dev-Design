@@ -184,13 +184,11 @@ export default function Home() {
 
       <aside className={`sidebar ${sidebarOpen ? "is-open" : ""}`}>
         <div className="brand" onClick={() => navigate("home")} role="button" tabIndex={0}>
-          <span className="brand-mark" aria-hidden="true">
-            <span />
-          </span>
-          <span className="brand-copy">
-            <strong>Pristha</strong>
-            <small>DEV</small>
-          </span>
+          <img
+            className="brand-logo"
+            src="/pristha_official_logo_transparent.png"
+            alt="Pristha"
+          />
         </div>
 
         <div className={`sidebar-profile-card ${workspace === "house" ? "is-house" : ""}`}>
@@ -323,9 +321,6 @@ export default function Home() {
               <span />
             </button>
             <span className="topbar-rule" />
-            <button className="language-button" onClick={() => setToast("Language preference saved")}>
-              EN <span>/</span> বাংলা
-            </button>
             <button
               className={`icon-button topbar-settings ${view === "settings" ? "active" : ""}`}
               onClick={() => navigate("settings")}
