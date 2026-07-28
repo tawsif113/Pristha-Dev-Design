@@ -1153,6 +1153,18 @@ input:focus-visible,
   background: #194b49;
 }
 
+.book-cover.slate {
+  background: #42505c;
+}
+
+.book-cover.plum {
+  background: #563d4c;
+}
+
+.book-cover.olive {
+  background: #526047;
+}
+
 .book-cover b {
   font-family: var(--font-pristha-bengali), serif;
   font-size: 23px;
@@ -1229,6 +1241,593 @@ input:focus-visible,
   margin-top: 5px;
   color: var(--muted);
   font-size: 11px;
+}
+
+.studio-dialog-layer {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+}
+
+.studio-dialog-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(10, 28, 24, 0.58);
+  backdrop-filter: blur(7px);
+  cursor: default;
+  animation: dialog-fade 180ms ease both;
+}
+
+.studio-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 640px);
+  max-height: min(88vh, 860px);
+  overflow: hidden;
+  border: 1px solid rgba(237, 229, 211, 0.88);
+  border-radius: 16px;
+  background: #fbf7ed;
+  box-shadow: 0 32px 90px rgba(8, 25, 21, 0.28);
+  animation: dialog-rise 220ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.studio-dialog.wide {
+  width: min(100%, 920px);
+}
+
+.studio-dialog > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 30px 34px 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.studio-dialog > header h2 {
+  margin: 7px 0 5px;
+  font-family: var(--font-pristha-display), Georgia, serif;
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.studio-dialog > header p {
+  max-width: 630px;
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-pristha-display), Georgia, serif;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.studio-dialog > header .icon-button {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  border-color: var(--hairline);
+}
+
+.studio-dialog-body {
+  max-height: calc(88vh - 135px);
+  overflow-y: auto;
+  padding: 28px 34px 32px;
+}
+
+.dialog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hairline);
+}
+
+.dialog-actions.split {
+  justify-content: space-between;
+}
+
+.dialog-actions.split > span {
+  max-width: 420px;
+  color: var(--faint);
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+
+.dialog-actions .primary-button,
+.dialog-actions .secondary-button {
+  min-height: 42px;
+}
+
+.dialog-actions button:disabled,
+.new-book-form button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.picker-label {
+  display: block;
+  color: var(--faint);
+  font-size: 8.5px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.resume-picker {
+  display: grid;
+  grid-template-columns: 285px minmax(0, 1fr);
+  gap: 34px;
+}
+
+.resume-picker > nav {
+  padding-right: 28px;
+  border-right: 1px solid var(--hairline);
+}
+
+.resume-picker > nav > .picker-label {
+  margin-bottom: 12px;
+}
+
+.resume-picker > nav > button {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 6px;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.resume-picker > nav > button:hover,
+.resume-picker > nav > button.active {
+  background: rgba(219, 232, 224, 0.72);
+}
+
+.book-cover.mini {
+  width: 36px;
+  height: 50px;
+  padding: 9px 2px 5px;
+  border-radius: 3px 5px 5px 3px;
+  box-shadow: 3px 4px 8px rgba(50, 43, 34, 0.12);
+}
+
+.book-cover.mini b {
+  font-size: 15px;
+}
+
+.book-cover.mini small {
+  max-width: 31px;
+  overflow: hidden;
+  font-size: 4px;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resume-picker > nav > button > span:nth-child(2) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.resume-picker > nav > button strong {
+  overflow: hidden;
+  font-family: var(--font-pristha-bengali), var(--font-pristha-display), serif;
+  font-size: 12px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resume-picker > nav > button small {
+  margin-top: 3px;
+  color: var(--faint);
+  font-size: 8px;
+}
+
+.resume-picker > nav > button > i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.resume-picker > nav > button.active > i {
+  background: var(--teal);
+  box-shadow: 0 0 0 3px rgba(23, 108, 104, 0.12);
+}
+
+.resume-chapter-picker > div:first-child {
+  display: grid;
+  gap: 4px;
+  padding: 3px 0 15px;
+}
+
+.resume-chapter-picker > div:first-child strong {
+  margin-top: 2px;
+  font-family: var(--font-pristha-bengali), var(--font-pristha-display), serif;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.resume-chapter-picker > div:first-child small {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.resume-chapter-list {
+  max-height: 335px;
+  overflow-y: auto;
+  border-top: 1px solid var(--hairline);
+}
+
+.resume-chapter-list > button,
+.book-overview-chapters > button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.resume-chapter-list > button:hover,
+.resume-chapter-list > button.active,
+.book-overview-chapters > button:hover {
+  background: rgba(255, 255, 255, 0.48);
+}
+
+.resume-chapter-list > button.active {
+  box-shadow: inset 2px 0 var(--teal);
+}
+
+.resume-chapter-list > button > span:first-child,
+.book-overview-chapters > button > span:first-child {
+  color: var(--marigold);
+  font-family: var(--font-pristha-display), Georgia, serif;
+  font-size: 12px;
+}
+
+.resume-chapter-list > button > span:nth-child(2),
+.book-overview-chapters > button > span:nth-child(2) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.resume-chapter-list strong,
+.book-overview-chapters strong {
+  overflow: hidden;
+  font-family: var(--font-pristha-bengali), var(--font-pristha-display), serif;
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.resume-chapter-list small,
+.book-overview-chapters small {
+  margin-top: 3px;
+  color: var(--faint);
+  font-size: 8px;
+}
+
+.resume-chapter-list em,
+.book-overview-chapters em,
+.chapter-browser em {
+  padding: 4px 7px;
+  border-radius: 10px;
+  background: var(--teal-soft);
+  color: var(--teal);
+  font-size: 7.5px;
+  font-style: normal;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.new-book-form {
+  display: grid;
+  gap: 20px;
+}
+
+.new-book-form > label,
+.new-book-form > div > label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.new-book-form > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.new-book-form input,
+.new-book-form select {
+  width: 100%;
+  height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--hairline);
+  border-radius: 7px;
+  outline: 0;
+  background: rgba(255, 253, 248, 0.72);
+  color: var(--ink);
+  font: 500 12px var(--font-pristha-sans), sans-serif;
+}
+
+.new-book-form input:focus,
+.new-book-form select:focus,
+.chapter-browser > label:focus-within {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(23, 108, 104, 0.1);
+}
+
+.new-book-form > p {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  padding: 13px 15px;
+  border-radius: 7px;
+  background: var(--teal-soft);
+  color: #4d625b;
+  font-size: 9.5px;
+  line-height: 1.5;
+}
+
+.new-book-form > p span {
+  color: var(--teal);
+  font-weight: 800;
+}
+
+.chapter-browser > label {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 13px;
+  border: 1px solid var(--hairline);
+  border-radius: 7px;
+  color: var(--faint);
+  background: rgba(255, 253, 248, 0.58);
+}
+
+.chapter-browser > label input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 11px;
+}
+
+.chapter-browser > div {
+  max-height: 430px;
+  overflow-y: auto;
+  margin-top: 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.chapter-browser > div > button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto 22px;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 8px;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.chapter-browser > div > button:hover {
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.chapter-browser > div > button > span:nth-child(2) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.chapter-browser > div > button strong {
+  font-family: var(--font-pristha-bengali), var(--font-pristha-display), serif;
+  font-size: 12px;
+}
+
+.chapter-browser > div > button small {
+  margin-top: 3px;
+  color: var(--faint);
+  font-size: 8px;
+}
+
+.chapter-empty {
+  display: grid;
+  place-items: center;
+  gap: 5px;
+  min-height: 190px;
+  color: var(--muted);
+}
+
+.chapter-empty strong {
+  font-family: var(--font-pristha-display), Georgia, serif;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.chapter-empty span {
+  color: var(--faint);
+  font-size: 9px;
+}
+
+.manage-book-list {
+  display: grid;
+}
+
+.manage-book-list > div {
+  display: grid;
+  grid-template-columns: 38px minmax(150px, 1fr) minmax(105px, .65fr) auto auto;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 3px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.manage-book-list > div > span:nth-child(2) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.manage-book-list > div > span:nth-child(2) strong {
+  overflow: hidden;
+  font-family: var(--font-pristha-bengali), var(--font-pristha-display), serif;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.manage-book-list > div > span:nth-child(2) small,
+.manage-progress small {
+  margin-top: 3px;
+  color: var(--faint);
+  font-size: 8px;
+}
+
+.manage-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.manage-progress > i {
+  flex: 1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--hairline);
+}
+
+.manage-progress > i b {
+  display: block;
+  height: 100%;
+  background: var(--teal);
+}
+
+.manage-book-list > div > button {
+  padding: 6px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--teal);
+  font-size: 8.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.manage-book-list > div > button.manage-continue {
+  border: 1px solid var(--hairline);
+  border-radius: 5px;
+  color: var(--ink);
+}
+
+.book-overview-dialog {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 35px;
+}
+
+.book-overview-dialog > aside {
+  padding-right: 28px;
+  border-right: 1px solid var(--hairline);
+}
+
+.book-cover.overview {
+  width: 118px;
+  height: 170px;
+  padding: 36px 8px 16px;
+}
+
+.book-cover.overview b {
+  font-size: 40px;
+}
+
+.book-cover.overview small {
+  font-size: 7px;
+}
+
+.book-overview-dialog dl {
+  display: grid;
+  gap: 9px;
+  margin: 20px 0 0;
+}
+
+.book-overview-dialog dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.book-overview-dialog dt {
+  color: var(--faint);
+  font-size: 8px;
+}
+
+.book-overview-dialog dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 8.5px;
+  font-weight: 650;
+  text-align: right;
+}
+
+.book-overview-chapters {
+  margin-top: 10px;
+  border-top: 1px solid var(--hairline);
+}
+
+.editor-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--teal);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@keyframes dialog-fade {
+  from { opacity: 0; }
+}
+
+@keyframes dialog-rise {
+  from { opacity: 0; transform: translateY(14px) scale(.985); }
 }
 
 .placeholder-page {
@@ -4966,5 +5565,111 @@ input:focus-visible,
 
   .settings-profile > button {
     grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .studio-dialog-layer {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .studio-dialog,
+  .studio-dialog.wide {
+    width: 100%;
+    max-height: 91vh;
+    border-radius: 14px;
+  }
+
+  .studio-dialog > header {
+    padding: 23px 21px 18px;
+  }
+
+  .studio-dialog > header h2 {
+    font-size: 28px;
+  }
+
+  .studio-dialog-body {
+    max-height: calc(91vh - 125px);
+    padding: 21px;
+  }
+
+  .resume-picker,
+  .book-overview-dialog {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .resume-picker > nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 0 0 15px;
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .resume-picker > nav > .picker-label {
+    display: none;
+  }
+
+  .resume-picker > nav > button {
+    flex: 0 0 205px;
+    border: 1px solid var(--hairline);
+  }
+
+  .resume-chapter-list {
+    max-height: 280px;
+  }
+
+  .new-book-form > div {
+    grid-template-columns: 1fr;
+  }
+
+  .manage-book-list > div {
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+  }
+
+  .manage-progress,
+  .manage-book-list > div > button:not(.manage-continue) {
+    display: none;
+  }
+
+  .dialog-actions.split {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dialog-actions.split > span {
+    order: 2;
+  }
+
+  .dialog-actions .primary-button,
+  .dialog-actions .secondary-button {
+    justify-content: center;
+  }
+
+  .book-overview-dialog > aside {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 18px;
+    padding: 0 0 22px;
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .book-cover.overview {
+    width: 80px;
+    height: 116px;
+    padding: 24px 5px 10px;
+  }
+
+  .book-cover.overview b {
+    font-size: 28px;
+  }
+
+  .book-overview-dialog dl {
+    margin: 0;
+    align-content: center;
   }
 }
