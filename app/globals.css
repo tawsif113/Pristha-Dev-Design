@@ -1765,27 +1765,6 @@ input:focus-visible,
   line-height: 1.05;
 }
 
-.home-library-heading p {
-  max-width: 500px;
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.home-library-heading > button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 0;
-  background: transparent;
-  color: var(--teal);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
 .cover-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2036,7 +2015,27 @@ input:focus-visible,
 }
 
 .shelf-section {
-  margin-top: 48px;
+  margin-top: 24px;
+}
+
+.shelf-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.shelf-actions button {
+  padding: 7px 0;
+  border: 0;
+  background: transparent;
+  color: var(--teal);
+  font-family: var(--font-pristha-display), Georgia, serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.shelf-actions button:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .shelf-list {
