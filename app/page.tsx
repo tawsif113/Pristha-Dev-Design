@@ -602,11 +602,10 @@ function HomeLibrary({ onNavigate }: { onNavigate: (view: View) => void }) {
   return (
     <section className="home-library" aria-labelledby="home-library-title">
       <div className="section-heading home-library-heading">
-        <div><span className="eyebrow">Your collection</span><h2 id="home-library-title">Your library</h2><p>Owned, saved, and borrowed stories—kept in one quiet place.</p></div>
-        <button className="secondary-button">Import a book</button>
+        <div><span className="eyebrow">Your collection</span><h2 id="home-library-title">Your library</h2></div>
       </div>
       <section className="shelf-section">
-        <div className="section-heading"><div><span className="eyebrow">Personal shelf</span><h2>All books</h2></div><button>Sort by recent</button></div>
+        <div className="shelf-actions"><button>Sort by recent</button></div>
         <div className="shelf-list">
           {shelf.map((book) => (
             <button key={book.title} onClick={() => onNavigate("book-detail")}>
