@@ -43,6 +43,121 @@ type IconName =
   | "team"
   | "pen";
 
+type StudioChapter = {
+  id: string;
+  number: string;
+  title: string;
+  meta: string;
+  words: number;
+  status: "Draft" | "Revising" | "In review";
+};
+
+type StudioBook = {
+  id: string;
+  title: string;
+  shortTitle: string;
+  romanTitle: string;
+  tone: "saffron" | "teal" | "slate" | "plum" | "olive";
+  progress: number;
+  format: string;
+  synopsis: string;
+  chapters: StudioChapter[];
+};
+
+type StudioDraftSelection = {
+  bookId: string;
+  chapterId: string;
+};
+
+const initialStudioBooks: StudioBook[] = [
+  {
+    id: "chithi",
+    title: "চিঠি",
+    shortTitle: "চি",
+    romanTitle: "CHITHI",
+    tone: "saffron",
+    progress: 64,
+    format: "Web serial",
+    synopsis: "A quiet serial about letters, distance, and the answers that arrive after people have changed.",
+    chapters: [
+      { id: "chithi-01", number: "01", title: "চিঠির শুরু", meta: "Edited 3 weeks ago", words: 1442, status: "Revising" },
+      { id: "chithi-02", number: "02", title: "শহরের শব্দ", meta: "Edited 18 days ago", words: 1680, status: "Revising" },
+      { id: "chithi-03", number: "03", title: "অপেক্ষা", meta: "Edited 12 days ago", words: 1538, status: "Revising" },
+      { id: "chithi-04", number: "04", title: "পুরোনো ঠিকানা", meta: "Edited 9 days ago", words: 1746, status: "Revising" },
+      { id: "chithi-05", number: "05", title: "ভুল ডাকবাক্স", meta: "Edited last week", words: 1611, status: "Draft" },
+      { id: "chithi-06", number: "06", title: "প্রত্যাবর্তন", meta: "Draft saved Friday", words: 1277, status: "Draft" },
+      { id: "chithi-07", number: "07", title: "সাত দিনের নীরবতা", meta: "Edited yesterday", words: 1920, status: "In review" },
+      { id: "chithi-08", number: "08", title: "নদীর ওপারে", meta: "Edited 18 min ago", words: 1842, status: "Draft" },
+    ],
+  },
+  {
+    id: "nildoriya",
+    title: "নীলদরিয়া",
+    shortTitle: "নী",
+    romanTitle: "NILDORIYA",
+    tone: "teal",
+    progress: 48,
+    format: "Novel manuscript",
+    synopsis: "A coastal family returns to a disappearing village and finds the sea has preserved more than memory.",
+    chapters: [
+      { id: "nildoriya-01", number: "01", title: "লবণের গন্ধ", meta: "Edited 4 weeks ago", words: 2310, status: "Revising" },
+      { id: "nildoriya-02", number: "02", title: "ফিরতি জোয়ার", meta: "Edited 2 weeks ago", words: 2184, status: "Revising" },
+      { id: "nildoriya-03", number: "03", title: "পুরোনো ঘাট", meta: "Edited last week", words: 2462, status: "Draft" },
+      { id: "nildoriya-04", number: "04", title: "দূরের আলো", meta: "Edited Monday", words: 1968, status: "In review" },
+      { id: "nildoriya-05", number: "05", title: "নদীর ওপারে", meta: "Edited 18 min ago", words: 1842, status: "Draft" },
+    ],
+  },
+  {
+    id: "monsoon-letters",
+    title: "Monsoon Letters",
+    shortTitle: "M",
+    romanTitle: "MONSOON",
+    tone: "slate",
+    progress: 37,
+    format: "Short story cycle",
+    synopsis: "Interlinked English-language stories following five tenants through one long Dhaka monsoon.",
+    chapters: [
+      { id: "monsoon-01", number: "01", title: "The First Window", meta: "Edited last month", words: 2028, status: "Revising" },
+      { id: "monsoon-02", number: "02", title: "Water on the Stairs", meta: "Edited 2 weeks ago", words: 2214, status: "Revising" },
+      { id: "monsoon-03", number: "03", title: "The Tenant Upstairs", meta: "Edited Sunday", words: 1886, status: "Draft" },
+      { id: "monsoon-04", number: "04", title: "A House of Rain", meta: "Edited yesterday", words: 2106, status: "Draft" },
+    ],
+  },
+  {
+    id: "last-ferry",
+    title: "After the Last Ferry",
+    shortTitle: "F",
+    romanTitle: "LAST FERRY",
+    tone: "plum",
+    progress: 52,
+    format: "Novel manuscript",
+    synopsis: "Two strangers are stranded on an island overnight, each carrying a truth meant for the mainland.",
+    chapters: [
+      { id: "ferry-01", number: "01", title: "Low Tide", meta: "Edited 5 weeks ago", words: 2470, status: "Revising" },
+      { id: "ferry-02", number: "02", title: "The Empty Jetty", meta: "Edited 3 weeks ago", words: 2260, status: "Revising" },
+      { id: "ferry-03", number: "03", title: "Borrowed Light", meta: "Edited 2 weeks ago", words: 2198, status: "Draft" },
+      { id: "ferry-04", number: "04", title: "A Name in the Ledger", meta: "Edited last week", words: 2390, status: "Draft" },
+      { id: "ferry-05", number: "05", title: "Before Dawn", meta: "Edited Tuesday", words: 2044, status: "Draft" },
+      { id: "ferry-06", number: "06", title: "The Last Crossing", meta: "Edited Saturday", words: 1712, status: "Draft" },
+    ],
+  },
+  {
+    id: "last-window",
+    title: "শহরের শেষ জানালা",
+    shortTitle: "শ",
+    romanTitle: "LAST WINDOW",
+    tone: "olive",
+    progress: 21,
+    format: "Novella",
+    synopsis: "An ageing photographer documents the last residents of a building marked for demolition.",
+    chapters: [
+      { id: "window-01", number: "01", title: "ছাদের ঘর", meta: "Edited 11 days ago", words: 1640, status: "Revising" },
+      { id: "window-02", number: "02", title: "নেগেটিভ", meta: "Edited last week", words: 1492, status: "Draft" },
+      { id: "window-03", number: "03", title: "শেষ জানালা", meta: "Edited Thursday", words: 932, status: "Draft" },
+    ],
+  },
+];
+
 const iconPaths: Record<IconName, React.ReactNode> = {
   home: <><path d="M3 10.8 12 3l9 7.8" /><path d="M5.5 9.5V21h13V9.5M9.5 21v-7h5v7" /></>,
   discover: <><circle cx="12" cy="12" r="9" /><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" /></>,
@@ -138,6 +253,11 @@ export default function Home() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [toast, setToast] = useState("");
+  const [studioBooks, setStudioBooks] = useState<StudioBook[]>(initialStudioBooks);
+  const [activeDraft, setActiveDraft] = useState<StudioDraftSelection>({
+    bookId: "chithi",
+    chapterId: "chithi-08",
+  });
 
   const navGroups = workspace === "writer" ? writerNav : houseNav;
   const filteredSearch = useMemo(
@@ -169,6 +289,61 @@ export default function Home() {
     setWorkspace(next);
     setWorkspaceMenu(false);
     navigate(next === "writer" ? "studio" : "house-overview");
+  }
+
+  function openDraft(selection: StudioDraftSelection) {
+    setActiveDraft(selection);
+    navigate("editor");
+  }
+
+  function createStudioBook(input: { title: string; format: string; language: string }) {
+    const id = `book-${Date.now()}`;
+    const chapterId = `${id}-01`;
+    const newBook: StudioBook = {
+      id,
+      title: input.title,
+      shortTitle: input.title.trim().slice(0, 1).toUpperCase() || "N",
+      romanTitle: input.title.toUpperCase().slice(0, 16),
+      tone: "olive",
+      progress: 2,
+      format: input.format,
+      synopsis: `${input.language} ${input.format.toLowerCase()} · A new manuscript ready for its first scene.`,
+      chapters: [
+        {
+          id: chapterId,
+          number: "01",
+          title: "Untitled chapter",
+          meta: "Created just now",
+          words: 0,
+          status: "Draft",
+        },
+      ],
+    };
+    setStudioBooks((current) => [...current, newBook]);
+    setToast(`${input.title} is ready for its first chapter`);
+    openDraft({ bookId: id, chapterId });
+  }
+
+  function addStudioChapter(bookId: string) {
+    const book = studioBooks.find((item) => item.id === bookId);
+    if (!book) return;
+    const nextNumber = book.chapters.length + 1;
+    const chapterId = `${bookId}-${String(nextNumber).padStart(2, "0")}-${Date.now()}`;
+    const chapter: StudioChapter = {
+      id: chapterId,
+      number: String(nextNumber).padStart(2, "0"),
+      title: "Untitled chapter",
+      meta: "Created just now",
+      words: 0,
+      status: "Draft",
+    };
+    setStudioBooks((current) =>
+      current.map((item) =>
+        item.id === bookId ? { ...item, chapters: [...item.chapters, chapter] } : item,
+      ),
+    );
+    setToast(`Chapter ${nextNumber} added to ${book.title}`);
+    openDraft({ bookId, chapterId });
   }
 
   if (view === "reader") {
@@ -338,6 +513,11 @@ export default function Home() {
             visible={view === "studio"}
             onNavigate={navigate}
             onToast={setToast}
+            books={studioBooks}
+            activeDraft={activeDraft}
+            onOpenDraft={openDraft}
+            onCreateBook={createStudioBook}
+            onAddChapter={addStudioChapter}
           />
           {view !== "studio" && (
             <PlaceholderView
@@ -345,6 +525,10 @@ export default function Home() {
               workspace={workspace}
               onNavigate={navigate}
               onToast={setToast}
+              books={studioBooks}
+              activeDraft={activeDraft}
+              onOpenDraft={openDraft}
+              onAddChapter={addStudioChapter}
             />
           )}
         </main>
@@ -382,18 +566,99 @@ function Studio({
   visible,
   onNavigate,
   onToast,
+  books,
+  activeDraft,
+  onOpenDraft,
+  onCreateBook,
+  onAddChapter,
 }: {
   visible: boolean;
   onNavigate: (view: View) => void;
   onToast: (message: string) => void;
+  books: StudioBook[];
+  activeDraft: StudioDraftSelection;
+  onOpenDraft: (selection: StudioDraftSelection) => void;
+  onCreateBook: (input: { title: string; format: string; language: string }) => void;
+  onAddChapter: (bookId: string) => void;
 }) {
+  const [dialog, setDialog] = useState<"resume" | "new-book" | "chapters" | "manage" | "book" | null>(null);
+  const [selectedBookId, setSelectedBookId] = useState(activeDraft.bookId);
+  const [selectedChapterId, setSelectedChapterId] = useState(activeDraft.chapterId);
+  const [chapterQuery, setChapterQuery] = useState("");
+  const [newBookTitle, setNewBookTitle] = useState("");
+  const [newBookFormat, setNewBookFormat] = useState("Novel manuscript");
+  const [newBookLanguage, setNewBookLanguage] = useState("Bengali");
+
+  const selectedBook = books.find((book) => book.id === selectedBookId) ?? books[0];
+  const selectedChapter =
+    selectedBook?.chapters.find((chapter) => chapter.id === selectedChapterId) ??
+    selectedBook?.chapters.at(-1);
+  const allChapters = books.flatMap((book) =>
+    book.chapters.map((chapter) => ({ book, chapter })),
+  );
+  const filteredChapters = allChapters.filter(({ book, chapter }) =>
+    `${book.title} ${chapter.title} ${chapter.number}`
+      .toLowerCase()
+      .includes(chapterQuery.trim().toLowerCase()),
+  );
+  const totalWords = allChapters.reduce((sum, item) => sum + item.chapter.words, 0);
+
+  useEffect(() => {
+    if (!dialog) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setDialog(null);
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [dialog]);
+
   if (!visible) return null;
 
-  const chapters = [
-    { number: "08", title: "নদীর ওপারে", book: "নীলদরিয়া", meta: "Edited 18 min ago", words: "1,842" },
-    { number: "04", title: "A House of Rain", book: "Monsoon Letters", meta: "Edited yesterday", words: "2,106" },
-    { number: "06", title: "প্রত্যাবর্তন", book: "চিঠি", meta: "Draft saved Friday", words: "1,277" },
+  const recentChapterRefs = [
+    { bookId: "nildoriya", chapterId: "nildoriya-05" },
+    { bookId: "monsoon-letters", chapterId: "monsoon-04" },
+    { bookId: "chithi", chapterId: "chithi-06" },
   ];
+  const recentChapters = recentChapterRefs
+    .map((reference) => {
+      const book = books.find((item) => item.id === reference.bookId);
+      const chapter = book?.chapters.find((item) => item.id === reference.chapterId);
+      return book && chapter ? { book, chapter } : null;
+    })
+    .filter((item): item is { book: StudioBook; chapter: StudioChapter } => Boolean(item));
+
+  function showResumePicker(bookId = activeDraft.bookId, chapterId = activeDraft.chapterId) {
+    const book = books.find((item) => item.id === bookId) ?? books[0];
+    const fallbackChapter = book?.chapters.at(-1);
+    setSelectedBookId(book?.id ?? "");
+    setSelectedChapterId(
+      book?.chapters.some((chapter) => chapter.id === chapterId)
+        ? chapterId
+        : fallbackChapter?.id ?? "",
+    );
+    setDialog("resume");
+  }
+
+  function showBook(book: StudioBook) {
+    setSelectedBookId(book.id);
+    setSelectedChapterId(book.chapters.at(-1)?.id ?? "");
+    setDialog("book");
+  }
+
+  function continueSelected() {
+    if (!selectedBook || !selectedChapter) return;
+    setDialog(null);
+    onOpenDraft({ bookId: selectedBook.id, chapterId: selectedChapter.id });
+  }
+
+  function submitNewBook(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const title = newBookTitle.trim();
+    if (!title) return;
+    setDialog(null);
+    onCreateBook({ title, format: newBookFormat, language: newBookLanguage });
+    setNewBookTitle("");
+  }
 
   return (
     <div className="studio-page page-enter">
@@ -403,10 +668,10 @@ function Studio({
           <h1 lang="bn">শুভ সকাল, রুমানা</h1>
           <p lang="bn">আজ আপনার গল্প কোথায় যাবে?</p>
           <div className="hero-actions">
-            <button className="primary-button" onClick={() => onNavigate("editor")}>
+            <button className="primary-button" onClick={() => showResumePicker()}>
               Continue writing <Icon name="arrow" size={18} />
             </button>
-            <button className="text-action" onClick={() => onToast("A fresh book workspace is ready")}>
+            <button className="text-action" onClick={() => setDialog("new-book")}>
               New book <span className="circled-plus"><Icon name="plus" size={17} /></span>
             </button>
           </div>
@@ -424,9 +689,9 @@ function Studio({
       </section>
 
       <section className="metric-strip" aria-label="Writing overview">
-        <div><strong>48.2k</strong><span>Total words</span></div>
-        <div><strong>18</strong><span>Chapters</span></div>
-        <div><strong>3</strong><span>Books</span></div>
+        <div><strong>{(totalWords / 1000).toFixed(1)}k</strong><span>Total words</span></div>
+        <div><strong>{allChapters.length}</strong><span>Chapters</span></div>
+        <div><strong>{books.length}</strong><span>Books</span></div>
         <div><strong>73%</strong><span>Weekly goal</span></div>
       </section>
 
@@ -434,17 +699,20 @@ function Studio({
         <div className="chapters-section">
           <div className="section-heading">
             <div><span className="eyebrow">Latest work</span><h2>Recent chapters</h2></div>
-            <button onClick={() => onNavigate("home")}>View all</button>
+            <button onClick={() => { setChapterQuery(""); setDialog("chapters"); }}>View all</button>
           </div>
           <div className="chapter-list">
-            {chapters.map((chapter) => (
-              <button key={chapter.number + chapter.title} onClick={() => onNavigate("editor")}>
+            {recentChapters.map(({ book, chapter }) => (
+              <button
+                key={chapter.id}
+                onClick={() => onOpenDraft({ bookId: book.id, chapterId: chapter.id })}
+              >
                 <span className="chapter-number">{chapter.number}</span>
                 <span className="chapter-copy">
                   <strong lang={chapter.title.match(/[ঀ-৿]/) ? "bn" : "en"}>{chapter.title}</strong>
-                  <small>{chapter.book} <i>·</i> {chapter.meta}</small>
+                  <small>{book.title} <i>·</i> {chapter.meta}</small>
                 </span>
-                <span className="chapter-words">{chapter.words} words</span>
+                <span className="chapter-words">{chapter.words.toLocaleString()} words</span>
                 <Icon name="arrow" size={23} />
               </button>
             ))}
@@ -458,8 +726,13 @@ function Studio({
           <p>Write the next scene before revising.</p>
           <div className="focus-note">
             <small>Current manuscript</small>
-            <strong lang="bn">চিঠি — অধ্যায় ০৮</strong>
-            <button onClick={() => onNavigate("editor")}>Open manuscript <Icon name="arrow" size={16} /></button>
+            <strong lang="bn">
+              {books.find((book) => book.id === activeDraft.bookId)?.title} — Chapter{" "}
+              {books
+                .find((book) => book.id === activeDraft.bookId)
+                ?.chapters.find((chapter) => chapter.id === activeDraft.chapterId)?.number}
+            </strong>
+            <button onClick={() => onOpenDraft(activeDraft)}>Open manuscript <Icon name="arrow" size={16} /></button>
           </div>
         </aside>
       </section>
@@ -467,25 +740,299 @@ function Studio({
       <section className="book-row">
         <div className="section-heading">
           <div><span className="eyebrow">Your shelf</span><h2>Books in progress</h2></div>
-          <button onClick={() => onToast("Book management opened")}>Manage books</button>
+          <button onClick={() => setDialog("manage")}>Manage books</button>
         </div>
         <div className="book-list">
-          <button onClick={() => onNavigate("editor")}>
-            <span className="book-cover saffron"><b lang="bn">চি</b><small>CHITHI</small></span>
-            <span><strong lang="bn">চিঠি</strong><small>8 chapters · 64% complete</small></span>
-            <i><span style={{ width: "64%" }} /></i>
-          </button>
-          <button onClick={() => onNavigate("editor")}>
-            <span className="book-cover teal"><b lang="bn">নী</b><small>NODI</small></span>
-            <span><strong lang="bn">নীলদরিয়া</strong><small>5 chapters · In review</small></span>
-            <i><span style={{ width: "48%" }} /></i>
-          </button>
-          <button className="new-book" onClick={() => onToast("New book setup started")}>
+          {books.map((book) => (
+            <button key={book.id} onClick={() => showBook(book)}>
+              <span className={`book-cover ${book.tone}`}>
+                <b lang={book.title.match(/[ঀ-৿]/) ? "bn" : "en"}>{book.shortTitle}</b>
+                <small>{book.romanTitle}</small>
+              </span>
+              <span>
+                <strong lang={book.title.match(/[ঀ-৿]/) ? "bn" : "en"}>{book.title}</strong>
+                <small>{book.chapters.length} chapters · {book.progress}% complete</small>
+              </span>
+              <i><span style={{ width: `${book.progress}%` }} /></i>
+            </button>
+          ))}
+          <button className="new-book" onClick={() => setDialog("new-book")}>
             <span><Icon name="plus" size={20} /></span>
             <strong>Start a new book</strong>
             <small>Build a serial or complete manuscript</small>
           </button>
         </div>
+      </section>
+
+      {dialog === "resume" && selectedBook && (
+        <StudioDialog
+          eyebrow="Continue writing"
+          title="Choose where to return"
+          description="Select one of your books, then the exact chapter you want to continue."
+          onClose={() => setDialog(null)}
+          wide
+        >
+          <div className="resume-picker">
+            <nav aria-label="Books in progress">
+              <span className="picker-label">5 books in progress</span>
+              {books.map((book) => (
+                <button
+                  key={book.id}
+                  className={selectedBook.id === book.id ? "active" : ""}
+                  onClick={() => {
+                    setSelectedBookId(book.id);
+                    setSelectedChapterId(book.chapters.at(-1)?.id ?? "");
+                  }}
+                >
+                  <span className={`book-cover mini ${book.tone}`}>
+                    <b>{book.shortTitle}</b><small>{book.romanTitle}</small>
+                  </span>
+                  <span><strong>{book.title}</strong><small>{book.chapters.length} chapters · {book.progress}%</small></span>
+                  <i aria-hidden="true" />
+                </button>
+              ))}
+            </nav>
+            <section className="resume-chapter-picker">
+              <div>
+                <span className="picker-label">Choose a chapter</span>
+                <strong>{selectedBook.title}</strong>
+                <small>{selectedBook.format}</small>
+              </div>
+              <div className="resume-chapter-list">
+                {[...selectedBook.chapters].reverse().map((chapter) => (
+                  <button
+                    key={chapter.id}
+                    className={selectedChapter?.id === chapter.id ? "active" : ""}
+                    onClick={() => setSelectedChapterId(chapter.id)}
+                  >
+                    <span>{chapter.number}</span>
+                    <span><strong>{chapter.title}</strong><small>{chapter.meta} · {chapter.words.toLocaleString()} words</small></span>
+                    <em>{chapter.status}</em>
+                  </button>
+                ))}
+              </div>
+            </section>
+          </div>
+          <div className="dialog-actions">
+            <button className="secondary-button" onClick={() => setDialog(null)}>Cancel</button>
+            <button className="primary-button" onClick={continueSelected} disabled={!selectedChapter}>
+              Continue this chapter <Icon name="arrow" size={17} />
+            </button>
+          </div>
+        </StudioDialog>
+      )}
+
+      {dialog === "new-book" && (
+        <StudioDialog
+          eyebrow="New manuscript"
+          title="Start with a clear foundation"
+          description="You can change these choices later. Pristha will prepare the manuscript and first chapter."
+          onClose={() => setDialog(null)}
+        >
+          <form className="new-book-form" onSubmit={submitNewBook}>
+            <label>
+              Book title
+              <input
+                autoFocus
+                value={newBookTitle}
+                onChange={(event) => setNewBookTitle(event.target.value)}
+                placeholder="Untitled book"
+                required
+              />
+            </label>
+            <div>
+              <label>
+                Format
+                <select value={newBookFormat} onChange={(event) => setNewBookFormat(event.target.value)}>
+                  <option>Novel manuscript</option>
+                  <option>Web serial</option>
+                  <option>Short story cycle</option>
+                  <option>Novella</option>
+                  <option>Poetry collection</option>
+                </select>
+              </label>
+              <label>
+                Writing language
+                <select value={newBookLanguage} onChange={(event) => setNewBookLanguage(event.target.value)}>
+                  <option>Bengali</option>
+                  <option>English</option>
+                  <option>Bengali + English</option>
+                </select>
+              </label>
+            </div>
+            <p><span>✓</span> Industry-standard chapter structure, autosave, version history, and manuscript formatting will be ready from the first page.</p>
+            <div className="dialog-actions">
+              <button type="button" className="secondary-button" onClick={() => setDialog(null)}>Cancel</button>
+              <button className="primary-button" disabled={!newBookTitle.trim()}>
+                Create book <Icon name="arrow" size={17} />
+              </button>
+            </div>
+          </form>
+        </StudioDialog>
+      )}
+
+      {dialog === "chapters" && (
+        <StudioDialog
+          eyebrow="All manuscripts"
+          title="Your chapters"
+          description={`${allChapters.length} chapters across ${books.length} books.`}
+          onClose={() => setDialog(null)}
+          wide
+        >
+          <div className="chapter-browser">
+            <label>
+              <Icon name="search" size={17} />
+              <input
+                autoFocus
+                value={chapterQuery}
+                onChange={(event) => setChapterQuery(event.target.value)}
+                placeholder="Search chapters or books"
+              />
+            </label>
+            <div>
+              {filteredChapters.map(({ book, chapter }) => (
+                <button
+                  key={chapter.id}
+                  onClick={() => {
+                    setDialog(null);
+                    onOpenDraft({ bookId: book.id, chapterId: chapter.id });
+                  }}
+                >
+                  <span className="chapter-number">{chapter.number}</span>
+                  <span><strong>{chapter.title}</strong><small>{book.title} · {chapter.meta}</small></span>
+                  <em>{chapter.status}</em>
+                  <Icon name="arrow" size={18} />
+                </button>
+              ))}
+              {filteredChapters.length === 0 && (
+                <div className="chapter-empty"><strong>No matching chapters</strong><span>Try a book title or a different phrase.</span></div>
+              )}
+            </div>
+          </div>
+        </StudioDialog>
+      )}
+
+      {dialog === "manage" && (
+        <StudioDialog
+          eyebrow="Book management"
+          title="Books in progress"
+          description="Open a manuscript, review its structure, or begin another project."
+          onClose={() => setDialog(null)}
+          wide
+        >
+          <div className="manage-book-list">
+            {books.map((book) => (
+              <div key={book.id}>
+                <span className={`book-cover mini ${book.tone}`}><b>{book.shortTitle}</b><small>{book.romanTitle}</small></span>
+                <span><strong>{book.title}</strong><small>{book.format} · {book.chapters.length} chapters</small></span>
+                <span className="manage-progress"><i><b style={{ width: `${book.progress}%` }} /></i><small>{book.progress}%</small></span>
+                <button onClick={() => showBook(book)}>Overview</button>
+                <button
+                  className="manage-continue"
+                  onClick={() => showResumePicker(book.id, book.chapters.at(-1)?.id)}
+                >
+                  Continue
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="dialog-actions split">
+            <span>Every manuscript is autosaved and kept in version history.</span>
+            <button className="primary-button" onClick={() => setDialog("new-book")}><Icon name="plus" size={16} /> New book</button>
+          </div>
+        </StudioDialog>
+      )}
+
+      {dialog === "book" && selectedBook && (
+        <StudioDialog
+          eyebrow="Manuscript overview"
+          title={selectedBook.title}
+          description={selectedBook.synopsis}
+          onClose={() => setDialog(null)}
+          wide
+        >
+          <div className="book-overview-dialog">
+            <aside>
+              <span className={`book-cover overview ${selectedBook.tone}`}>
+                <b>{selectedBook.shortTitle}</b><small>{selectedBook.romanTitle}</small>
+              </span>
+              <dl>
+                <div><dt>Format</dt><dd>{selectedBook.format}</dd></div>
+                <div><dt>Chapters</dt><dd>{selectedBook.chapters.length}</dd></div>
+                <div><dt>Progress</dt><dd>{selectedBook.progress}%</dd></div>
+              </dl>
+            </aside>
+            <section>
+              <span className="picker-label">Manuscript chapters</span>
+              <div className="book-overview-chapters">
+                {[...selectedBook.chapters].reverse().slice(0, 5).map((chapter) => (
+                  <button
+                    key={chapter.id}
+                    onClick={() => {
+                      setDialog(null);
+                      onOpenDraft({ bookId: selectedBook.id, chapterId: chapter.id });
+                    }}
+                  >
+                    <span>{chapter.number}</span>
+                    <span><strong>{chapter.title}</strong><small>{chapter.meta}</small></span>
+                    <em>{chapter.status}</em>
+                  </button>
+                ))}
+              </div>
+            </section>
+          </div>
+          <div className="dialog-actions split">
+            <button className="secondary-button" onClick={() => onAddChapter(selectedBook.id)}>
+              <Icon name="plus" size={16} /> Add chapter
+            </button>
+            <button
+              className="primary-button"
+              onClick={() => showResumePicker(selectedBook.id, selectedBook.chapters.at(-1)?.id)}
+            >
+              Choose chapter <Icon name="arrow" size={17} />
+            </button>
+          </div>
+        </StudioDialog>
+      )}
+    </div>
+  );
+}
+
+function StudioDialog({
+  eyebrow,
+  title,
+  description,
+  onClose,
+  wide = false,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  description: string;
+  onClose: () => void;
+  wide?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="studio-dialog-layer">
+      <button className="studio-dialog-scrim" onClick={onClose} aria-label="Close dialog" />
+      <section
+        className={`studio-dialog ${wide ? "wide" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="studio-dialog-title"
+      >
+        <header>
+          <div>
+            <span className="eyebrow">{eyebrow}</span>
+            <h2 id="studio-dialog-title">{title}</h2>
+            <p>{description}</p>
+          </div>
+          <button className="icon-button" onClick={onClose} aria-label="Close">
+            <Icon name="close" size={19} />
+          </button>
+        </header>
+        <div className="studio-dialog-body">{children}</div>
       </section>
     </div>
   );
@@ -496,11 +1043,19 @@ function PlaceholderView({
   workspace,
   onNavigate,
   onToast,
+  books,
+  activeDraft,
+  onOpenDraft,
+  onAddChapter,
 }: {
   view: View;
   workspace: "writer" | "house";
   onNavigate: (view: View) => void;
   onToast: (message: string) => void;
+  books: StudioBook[];
+  activeDraft: StudioDraftSelection;
+  onOpenDraft: (selection: StudioDraftSelection) => void;
+  onAddChapter: (bookId: string) => void;
 }) {
   if (view === "home") return <ReaderHome onNavigate={onNavigate} />;
   if (view === "discover") return <DiscoverView onNavigate={onNavigate} />;
@@ -515,13 +1070,35 @@ function PlaceholderView({
   }
   if (view === "dashboard") return <DashboardView onToast={onToast} />;
   if (view === "audience") return <AudienceView />;
-  if (view === "editor") return <EditorView onToast={onToast} />;
+  if (view === "editor") {
+    return (
+      <EditorView
+        onToast={onToast}
+        onNavigate={onNavigate}
+        books={books}
+        selection={activeDraft}
+        onOpenDraft={onOpenDraft}
+        onAddChapter={onAddChapter}
+      />
+    );
+  }
   if (view === "profile") return <ProfileView onNavigate={onNavigate} />;
   if (view === "settings") return <SettingsView onToast={onToast} />;
   if (workspace === "house" || view.startsWith("house-")) {
     return <HouseView view={view} onToast={onToast} />;
   }
-  return <Studio visible onNavigate={onNavigate} onToast={onToast} />;
+  return (
+    <Studio
+      visible
+      onNavigate={onNavigate}
+      onToast={onToast}
+      books={books}
+      activeDraft={activeDraft}
+      onOpenDraft={onOpenDraft}
+      onCreateBook={() => onToast("New book setup opened")}
+      onAddChapter={onAddChapter}
+    />
+  );
 }
 
 function PageHeader({
@@ -1260,10 +1837,29 @@ function AudienceView() {
   );
 }
 
-function EditorView({ onToast }: { onToast: (message: string) => void }) {
-  const [draft, setDraft] = useState(
-    "চিঠিটা ডাকবাক্সে ফেলে আসার পর থেকে মিরার মনে হচ্ছিল, শহরটা যেন থেমে আছে।\n\nপ্রতিটি সকাল শুরু হলো একইভাবে—জানালার পাশে এক কাপ চা, দূরে রিকশার ঘণ্টি, আর দরজার নিচে কোনো উত্তর নেই।\n\nসপ্তম দিনের বিকেলে, বৃষ্টি নামার ঠিক আগে, সে আবার সেই পরিচিত হাতের লেখা দেখল।",
-  );
+function EditorView({
+  onToast,
+  onNavigate,
+  books,
+  selection,
+  onOpenDraft,
+  onAddChapter,
+}: {
+  onToast: (message: string) => void;
+  onNavigate: (view: View) => void;
+  books: StudioBook[];
+  selection: StudioDraftSelection;
+  onOpenDraft: (selection: StudioDraftSelection) => void;
+  onAddChapter: (bookId: string) => void;
+}) {
+  const activeBook = books.find((book) => book.id === selection.bookId) ?? books[0];
+  const activeChapter =
+    activeBook?.chapters.find((chapter) => chapter.id === selection.chapterId) ??
+    activeBook?.chapters.at(-1);
+  const openingDraft = activeBook?.id === "monsoon-letters" || activeBook?.id === "last-ferry"
+    ? "The room had kept the rain out for years, but that afternoon the ceiling finally remembered the river.\n\nShe moved the letters away from the window and listened to the building settle around her.\n\nBy dusk, someone was waiting on the landing."
+    : "চিঠিটা ডাকবাক্সে ফেলে আসার পর থেকে মিরার মনে হচ্ছিল, শহরটা যেন থেমে আছে।\n\nপ্রতিটি সকাল শুরু হলো একইভাবে—জানালার পাশে এক কাপ চা, দূরে রিকশার ঘণ্টি, আর দরজার নিচে কোনো উত্তর নেই।\n\nসপ্তম দিনের বিকেলে, বৃষ্টি নামার ঠিক আগে, সে আবার সেই পরিচিত হাতের লেখা দেখল।";
+  const [draft, setDraft] = useState(openingDraft);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [focusMode, setFocusMode] = useState(false);
   const [manuscriptStyle, setManuscriptStyle] = useState("Novel manuscript");
@@ -1272,6 +1868,10 @@ function EditorView({ onToast }: { onToast: (message: string) => void }) {
   const wordCount = draft.trim().split(/\s+/).filter(Boolean).length;
   const goal = 1500;
   const progress = Math.min(100, Math.round((wordCount / goal) * 100));
+
+  useEffect(() => {
+    setDraft(openingDraft);
+  }, [selection.bookId, selection.chapterId]);
 
   function wrapSelection(before: string, after = before, emptyText = "text") {
     const textarea = textareaRef.current;
@@ -1301,8 +1901,16 @@ function EditorView({ onToast }: { onToast: (message: string) => void }) {
 
   return (
     <div className={`editor-page page-enter ${focusMode ? "is-focus-mode" : ""}`}>
+      <button className="editor-back" onClick={() => onNavigate("studio")}>
+        <span aria-hidden="true">←</span> Back to Studio
+      </button>
       <div className="editor-head">
-        <div><span className="eyebrow">চিঠি <span className="crumb-divider">/</span> Chapter 08</span><h1 lang="bn">নদীর ওপারে</h1></div>
+        <div>
+          <span className="eyebrow">
+            {activeBook?.title} <span className="crumb-divider">/</span> Chapter {activeChapter?.number}
+          </span>
+          <h1 lang={activeChapter?.title.match(/[ঀ-৿]/) ? "bn" : "en"}>{activeChapter?.title}</h1>
+        </div>
         <div className="editor-status"><span><i /> All changes saved</span><button className="secondary-button" onClick={() => onToast("Preview opened")}>Preview</button><button className="primary-button" onClick={() => onToast("Chapter sent for review")}>Send for review</button></div>
       </div>
       <div className="editor-toolbar" role="toolbar" aria-label="Writing tools">
@@ -1330,16 +1938,25 @@ function EditorView({ onToast }: { onToast: (message: string) => void }) {
       <div className="editor-workspace">
         <aside className="chapter-outline">
           <div className="outline-head"><span className="eyebrow">Manuscript</span><button onClick={() => onToast("Chapter panel opened")} aria-label="More manuscript options">•••</button></div>
-          <span className="outline-book">চিঠি <small>8 chapters</small></span>
-          {["01 · চিঠির শুরু", "02 · শহরের শব্দ", "03 · অপেক্ষা", "04 · নদীর ওপারে"].map((item, index) => (
-            <button className={index === 3 ? "active" : ""} key={item}><span>{item}</span>{index === 3 && <small>Editing</small>}</button>
+          <span className="outline-book">{activeBook?.title} <small>{activeBook?.chapters.length} chapters</small></span>
+          {activeBook?.chapters.map((chapter) => (
+            <button
+              className={chapter.id === activeChapter?.id ? "active" : ""}
+              key={chapter.id}
+              onClick={() => onOpenDraft({ bookId: activeBook.id, chapterId: chapter.id })}
+            >
+              <span>{chapter.number} · {chapter.title}</span>
+              {chapter.id === activeChapter?.id && <small>Editing</small>}
+            </button>
           ))}
-          <button className="add-scene"><Icon name="plus" size={15} /> Add scene</button>
+          <button className="add-scene" onClick={() => activeBook && onAddChapter(activeBook.id)}>
+            <Icon name="plus" size={15} /> Add chapter
+          </button>
           <div className="outline-note"><span>Chapter note</span><p>She receives the reply just before the rain.</p></div>
         </aside>
         <article className="paper-editor">
-          <div className="paper-kicker"><span>পর্ব ১ · অধ্যায় ৮</span><span>Draft</span></div>
-          <h2 lang="bn">নদীর ওপারে</h2>
+          <div className="paper-kicker"><span>Part 1 · Chapter {activeChapter?.number}</span><span>{activeChapter?.status}</span></div>
+          <h2 lang={activeChapter?.title.match(/[ঀ-৿]/) ? "bn" : "en"}>{activeChapter?.title}</h2>
           <textarea
             ref={textareaRef}
             aria-label="Chapter text"
