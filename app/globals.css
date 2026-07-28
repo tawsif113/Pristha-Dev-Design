@@ -779,28 +779,96 @@ input:focus-visible,
 }
 
 .streak {
-  padding-top: 3px;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(24px, 2.6vw, 36px);
+  border: 1px solid rgba(185, 154, 96, 0.28);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(231, 179, 72, 0.08), transparent 34%),
+    linear-gradient(135deg, rgba(255, 253, 247, 0.98), rgba(248, 243, 232, 0.92));
+  box-shadow:
+    0 18px 45px rgba(31, 52, 45, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.streak > div:first-child {
+.streak::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -74px;
+  bottom: -84px;
+  border: 1px solid rgba(231, 179, 72, 0.16);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 22px rgba(231, 179, 72, 0.035),
+    0 0 0 44px rgba(231, 179, 72, 0.025);
+  pointer-events: none;
+}
+
+.streak-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.streak-card-head > div {
+  display: grid;
+  gap: 12px;
+}
+
+.streak-card-head > div span {
+  color: var(--teal-deep);
+  font-family: var(--font-pristha-bengali), "Noto Serif Bengali", Georgia, serif;
+  font-size: clamp(18px, 1.5vw, 24px);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.streak-card-head > div i {
+  width: 34px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--marigold);
+}
+
+.streak-card-head > time {
+  flex: 0 0 auto;
+  padding: 8px 13px 7px;
+  border: 1px solid rgba(231, 179, 72, 0.38);
+  border-radius: 999px;
+  color: var(--teal-deep);
+  font-family: var(--font-pristha-bengali), "Noto Serif Bengali", Georgia, serif;
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.streak-count {
   display: flex;
   align-items: baseline;
-  gap: 14px;
+  gap: clamp(10px, 1.2vw, 18px);
+  margin-top: clamp(22px, 2.8vw, 34px);
+  color: var(--teal-deep);
 }
 
-.streak > div:first-child strong {
+.streak-count strong {
   color: var(--teal);
   font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 72px;
+  font-size: clamp(68px, 6.2vw, 96px);
   font-weight: 500;
-  line-height: 0.82;
+  line-height: 0.78;
+  letter-spacing: -0.055em;
 }
 
-.streak > div:first-child span {
-  max-width: 100px;
+.streak-count span {
   font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 17px;
-  line-height: 1.2;
+  font-size: clamp(24px, 2.2vw, 34px);
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .week-line {
@@ -808,17 +876,18 @@ input:focus-visible,
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0;
-  margin-top: 28px;
+  margin-top: clamp(30px, 3vw, 42px);
 }
 
 .week-line::after {
   content: "";
   position: absolute;
-  top: 29px;
-  left: 7px;
-  right: 7px;
-  height: 1px;
-  background: var(--teal);
+  top: 34px;
+  left: calc(100% / 14);
+  right: calc(100% / 14);
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(18, 93, 83, 0.82);
 }
 
 .week-line span {
@@ -830,33 +899,53 @@ input:focus-visible,
 }
 
 .week-line small {
-  font-family: var(--font-pristha-display), Georgia, serif;
+  color: var(--teal-deep);
+  font-family: var(--font-pristha-bengali), "Noto Serif Bengali", Georgia, serif;
   font-size: 12px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .week-line i {
-  width: 12px;
-  height: 12px;
-  margin-top: 10px;
+  width: 14px;
+  height: 14px;
+  margin-top: 16px;
   border-radius: 50%;
   background: var(--teal);
-  box-shadow: 0 0 0 3px var(--ivory);
+  box-shadow: 0 0 0 4px #faf6ec;
 }
 
 .week-line i.today {
   background: var(--marigold);
+  box-shadow:
+    0 0 0 4px #faf6ec,
+    0 0 0 7px rgba(231, 179, 72, 0.4),
+    0 0 0 12px rgba(231, 179, 72, 0.13);
 }
 
-.streak > p {
-  margin: 20px 0 0;
-  color: var(--muted);
-  font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 14px;
+.streak-summary {
+  display: grid;
+  gap: 2px;
+  margin-top: 30px;
 }
 
-.streak > p span {
-  margin: 0 6px;
+.streak-summary p {
+  margin: 0;
+  color: var(--teal-deep);
+  font-family: var(--font-pristha-bengali), "Noto Serif Bengali", Georgia, serif;
+  font-size: clamp(18px, 1.6vw, 24px);
+  font-weight: 500;
+}
+
+.streak-summary p span {
+  margin: 0 7px;
   color: var(--marigold);
+}
+
+.streak-summary time {
+  color: var(--muted);
+  font-family: var(--font-pristha-bengali), "Noto Serif Bengali", Georgia, serif;
+  font-size: 13px;
 }
 
 .metric-strip {
@@ -2108,8 +2197,8 @@ input:focus-visible,
   }
 
   .streak {
-    max-width: 460px;
-    padding-top: 0;
+    width: min(100%, 620px);
+    max-width: none;
   }
 
   .studio-grid {
@@ -2155,6 +2244,47 @@ input:focus-visible,
     align-items: stretch;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .streak {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+
+  .streak-card-head {
+    gap: 12px;
+  }
+
+  .streak-card-head > time {
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+
+  .streak-count {
+    align-items: flex-end;
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+
+  .streak-count strong {
+    font-size: 70px;
+  }
+
+  .streak-count span {
+    padding-bottom: 6px;
+    font-size: 25px;
+  }
+
+  .week-line {
+    margin-inline: -6px;
+  }
+
+  .week-line small {
+    font-size: 10px;
+  }
+
+  .streak-summary {
+    margin-top: 27px;
   }
 
   .text-action {
