@@ -6,6 +6,7 @@ type View =
   | "home"
   | "discover"
   | "book-detail"
+  | "book-detail-no-new"
   | "reader"
   | "studio"
   | "dashboard"
@@ -503,7 +504,15 @@ function PlaceholderView({
 }) {
   if (view === "home") return <ReaderHome onNavigate={onNavigate} />;
   if (view === "discover") return <DiscoverView onNavigate={onNavigate} />;
-  if (view === "book-detail") return <BookDetailView onNavigate={onNavigate} onToast={onToast} />;
+  if (view === "book-detail" || view === "book-detail-no-new") {
+    return (
+      <BookDetailView
+        variant={view === "book-detail" ? "new-chapter" : "no-new-chapter"}
+        onNavigate={onNavigate}
+        onToast={onToast}
+      />
+    );
+  }
   if (view === "dashboard") return <DashboardView onToast={onToast} />;
   if (view === "audience") return <AudienceView />;
   if (view === "editor") return <EditorView onToast={onToast} />;
@@ -539,76 +548,116 @@ function PageHeader({
 }
 
 function ReaderHome({ onNavigate }: { onNavigate: (view: View) => void }) {
+  const [homeTab, setHomeTab] = useState<"tonight" | "library">("tonight");
   const recommendations = [
-    { initial: "অ", title: "অচেনা জানালা", author: "সায়মা রহমান", tone: "umber" },
-    { initial: "ম", title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", tone: "sage" },
-    { initial: "শ", title: "শেষ ট্রেন", author: "তাহমিনা রেজা", tone: "navy" },
-    { initial: "ন", title: "নদীর ওপারে", author: "আরিফুল হক", tone: "teal" },
+    { initial: "অ", title: "অচেনা জানালা", author: "সায়মা রহমান", tone: "umber", detail: "book-detail" as View },
+    { initial: "ম", title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", tone: "sage", detail: "book-detail-no-new" as View },
+    { initial: "শ", title: "শেষ ট্রেন", author: "তাহমিনা রেজা", tone: "navy", detail: "book-detail-no-new" as View },
+    { initial: "ন", title: "নদীর ওপারে", author: "আরিফুল হক", tone: "teal", detail: "book-detail" as View },
   ];
   return (
     <div className="product-page page-enter">
-      <PageHeader
-        eyebrow="Good evening, Rumana"
-        title="Tonight on your page"
-      />
-
-      <section className="reader-feature">
-        <div className="resume-reading">
-          <span className="book-cover large saffron"><b lang="bn">চি</b><small>CHITHI</small></span>
-          <div>
-            <span className="eyebrow">Continue reading</span>
-            <h2 lang="bn">অধ্যায় চার — দেরি</h2>
-            <p>You stopped three paragraphs in. Your watermark and place are safely kept.</p>
-            <div className="reading-progress"><span /></div>
-            <small>38% · page 6 of 16 · 4 min left</small>
-          </div>
-          <button className="primary-button" onClick={() => onNavigate("reader")}>
-            Resume <Icon name="arrow" size={18} />
+      <header className="home-page-header">
+        <span className="eyebrow">Good evening, Rumana</span>
+        <h1 className="sr-only">Home</h1>
+        <div className="home-subtabs" role="tablist" aria-label="Home sections">
+          <button
+            id="home-tab-tonight"
+            type="button"
+            role="tab"
+            aria-selected={homeTab === "tonight"}
+            aria-controls="home-panel-tonight"
+            className={homeTab === "tonight" ? "active" : ""}
+            onClick={() => setHomeTab("tonight")}
+          >
+            Tonight on your page
+          </button>
+          <button
+            id="home-tab-library"
+            type="button"
+            role="tab"
+            aria-selected={homeTab === "library"}
+            aria-controls="home-panel-library"
+            className={homeTab === "library" ? "active" : ""}
+            onClick={() => setHomeTab("library")}
+          >
+            Your Library
           </button>
         </div>
-      </section>
+      </header>
 
-      <section className="open-section">
-        <div className="section-heading">
-          <div><span className="eyebrow">Fresh for you</span><h2>টাটকা পাতা</h2></div>
-          <button onClick={() => onNavigate("discover")}>Explore stories</button>
-        </div>
-        <div className="cover-grid">
-          {recommendations.map((book) => (
-            <button key={book.title} onClick={() => onNavigate("book-detail")}>
-              <span className={`discovery-cover ${book.tone}`}><b>{book.initial}</b><small>PRISTHA</small></span>
-              <span><strong lang="bn">{book.title}</strong><small lang="bn">{book.author}</small></span>
-            </button>
-          ))}
-        </div>
-      </section>
+      {homeTab === "tonight" ? (
+        <div
+          id="home-panel-tonight"
+          role="tabpanel"
+          aria-labelledby="home-tab-tonight"
+          className="home-tab-panel"
+        >
+          <section className="reader-feature">
+            <div className="resume-reading">
+              <span className="book-cover large saffron"><b lang="bn">চি</b><small>CHITHI</small></span>
+              <div>
+                <span className="eyebrow">Continue reading</span>
+                <h2 lang="bn">অধ্যায় চার — দেরি</h2>
+                <p>You stopped three paragraphs in. Your watermark and place are safely kept.</p>
+                <div className="reading-progress"><span /></div>
+                <small>38% · page 6 of 16 · 4 min left</small>
+              </div>
+              <button className="primary-button" onClick={() => onNavigate("reader")}>
+                Resume <Icon name="arrow" size={18} />
+              </button>
+            </div>
+          </section>
 
-      <section className="feed-line">
-        <span className="profile-portrait">ন</span>
-        <div><strong lang="bn">নুসরাত আহমেদ নতুন একটি অধ্যায় প্রকাশ করেছেন</strong><small>চিঠি · Chapter 08 · 22 minutes ago</small></div>
-        <button onClick={() => onNavigate("reader")}>Read chapter <Icon name="arrow" size={16} /></button>
-      </section>
-      <HomeLibrary onNavigate={onNavigate} />
+          <section className="open-section">
+            <div className="section-heading">
+              <div><span className="eyebrow">Fresh for you</span><h2>টাটকা পাতা</h2></div>
+              <button onClick={() => onNavigate("discover")}>Explore stories</button>
+            </div>
+            <div className="cover-grid">
+              {recommendations.map((book) => (
+                <button key={book.title} onClick={() => onNavigate(book.detail)}>
+                  <span className={`discovery-cover ${book.tone}`}><b>{book.initial}</b><small>PRISTHA</small></span>
+                  <span><strong lang="bn">{book.title}</strong><small lang="bn">{book.author}</small></span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="feed-line">
+            <span className="profile-portrait">ন</span>
+            <div><strong lang="bn">নুসরাত আহমেদ নতুন একটি অধ্যায় প্রকাশ করেছেন</strong><small>চিঠি · Chapter 08 · 22 minutes ago</small></div>
+            <button onClick={() => onNavigate("reader")}>Read chapter <Icon name="arrow" size={16} /></button>
+          </section>
+        </div>
+      ) : (
+        <div
+          id="home-panel-library"
+          role="tabpanel"
+          aria-labelledby="home-tab-library"
+          className="home-tab-panel"
+        >
+          <HomeLibrary onNavigate={onNavigate} />
+        </div>
+      )}
     </div>
   );
 }
 
 function HomeLibrary({ onNavigate }: { onNavigate: (view: View) => void }) {
   const shelf = [
-    { title: "চিঠি", author: "নুসরাত আহমেদ", progress: 38, tone: "saffron", initial: "চি", status: "Reading" },
-    { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", progress: 72, tone: "navy", initial: "শে", status: "Reading" },
-    { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", progress: 100, tone: "sage", initial: "মে", status: "Finished" },
+    { title: "চিঠি", author: "নুসরাত আহমেদ", progress: 38, tone: "saffron", initial: "চি", status: "Reading", detail: "book-detail" as View },
+    { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", progress: 72, tone: "navy", initial: "শে", status: "Reading", detail: "book-detail-no-new" as View },
+    { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", progress: 100, tone: "sage", initial: "মে", status: "Finished", detail: "book-detail-no-new" as View },
   ];
   return (
     <section className="home-library" aria-labelledby="home-library-title">
-      <div className="section-heading home-library-heading">
-        <div><span className="eyebrow">Your collection</span><h2 id="home-library-title">Your library</h2></div>
-      </div>
+      <h2 id="home-library-title" className="sr-only">Your Library</h2>
       <section className="shelf-section">
         <div className="shelf-actions"><button>Sort by recent</button></div>
         <div className="shelf-list">
           {shelf.map((book) => (
-            <button key={book.title} onClick={() => onNavigate("book-detail")}>
+            <button key={book.title} onClick={() => onNavigate(book.detail)}>
               <span className={`book-cover ${book.tone === "saffron" ? "saffron" : book.tone === "teal" ? "teal" : ""}`}><b>{book.initial}</b><small>PRISTHA</small></span>
               <span><strong lang="bn">{book.title}</strong><small lang="bn">{book.author}</small></span>
               <em>{book.status}</em>
@@ -668,21 +717,63 @@ function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
 }
 
 function BookDetailView({
+  variant,
   onNavigate,
   onToast,
 }: {
+  variant: "new-chapter" | "no-new-chapter";
   onNavigate: (view: View) => void;
   onToast: (message: string) => void;
 }) {
   const [saved, setSaved] = useState(true);
-  const chapters = [
-    { number: "01", title: "যে চিঠি পৌঁছায়নি", time: "12 min read", access: "free" },
-    { number: "02", title: "জানালার পাশে অপেক্ষা", time: "15 min read", access: "free" },
-    { number: "03", title: "নদীর ওপারে", time: "18 min read", access: "free" },
-    { number: "04", title: "দেরি", time: "14 min read", access: "owned", progress: "38%" },
-    { number: "05", title: "অপরিচিত হাতের লেখা", time: "16 min read", access: "locked" },
-    { number: "06", title: "ফেরার ঠিকানা", time: "19 min read", access: "locked" },
-  ];
+  const hasNewChapter = variant === "new-chapter";
+  const book = hasNewChapter
+    ? {
+        title: "চিঠি",
+        latinTitle: "CHITHI",
+        author: "নুসরাত আহমেদ",
+        authorInitial: "ন",
+        coverLabel: "A SERIAL NOVEL",
+        tags: ["Literary fiction", "Ongoing serial"],
+        chapterCount: "12",
+        totalReading: "2h 46m",
+        releaseLabel: "Weekly",
+        releaseCaption: "New chapters",
+        progress: "38%",
+        synopsis:
+          "পুরোনো ঢাকার একটি বন্ধ ডাকঘরে রাইসা এমন সব চিঠি খুঁজে পায়, যেগুলো কখনো প্রাপকের কাছে পৌঁছায়নি। প্রতিটি খাম খুলতেই শহরের হারিয়ে যাওয়া মানুষ, অসমাপ্ত ভালোবাসা আর তার নিজের পরিবারের চাপা পড়া ইতিহাস এক সুতোয় জড়াতে থাকে।",
+        chapters: [
+          { number: "01", title: "যে চিঠি পৌঁছায়নি", time: "12 min read", access: "free" },
+          { number: "02", title: "জানালার পাশে অপেক্ষা", time: "15 min read", access: "free" },
+          { number: "03", title: "নদীর ওপারে", time: "18 min read", access: "free" },
+          { number: "04", title: "দেরি", time: "14 min read", access: "owned", progress: "38%" },
+          { number: "05", title: "অপরিচিত হাতের লেখা", time: "16 min read", access: "locked" },
+          { number: "06", title: "ফেরার ঠিকানা", time: "19 min read", access: "locked" },
+        ],
+      }
+    : {
+        title: "শেষ ট্রেন",
+        latinTitle: "SHESH TRAIN",
+        author: "তাহমিনা রেজা",
+        authorInitial: "ত",
+        coverLabel: "A COMPLETE NOVEL",
+        tags: ["Mystery", "Complete novel"],
+        chapterCount: "9",
+        totalReading: "3h 12m",
+        releaseLabel: "Complete",
+        releaseCaption: "Publication",
+        progress: "72%",
+        synopsis:
+          "মধ্যরাতের শেষ ট্রেনটি বহু বছর ধরে বন্ধ একটি স্টেশনে থামে। সাংবাদিক মীরা সেখানে নেমে আবিষ্কার করে, যাত্রীদের প্রত্যেকেই এমন একটি শহরের স্মৃতি বহন করছে যার কোনো মানচিত্র নেই। সত্যের কাছে পৌঁছাতে হলে তাকে ট্রেনটি আবার ছাড়ার আগেই হারিয়ে যাওয়া একজন মানুষের গল্প শেষ করতে হবে।",
+        chapters: [
+          { number: "01", title: "শেষ প্ল্যাটফর্ম", time: "17 min read", access: "free" },
+          { number: "02", title: "নামহীন যাত্রী", time: "20 min read", access: "free" },
+          { number: "03", title: "ঘড়িতে বারোটা পাঁচ", time: "18 min read", access: "free" },
+          { number: "04", title: "পরিত্যক্ত স্টেশন", time: "22 min read", access: "free" },
+          { number: "05", title: "যে শহর মানচিত্রে নেই", time: "19 min read", access: "owned", progress: "72%" },
+          { number: "06", title: "ফেরার টিকিট", time: "21 min read", access: "locked" },
+        ],
+      };
 
   return (
     <div className="product-page book-detail-page page-enter">
@@ -691,35 +782,30 @@ function BookDetailView({
       </button>
 
       <section className="book-detail-hero">
-        <div className="book-detail-cover" aria-label="Cover of Chithi">
-          <span className="cover-kicker">A SERIAL NOVEL</span>
+        <div className={`book-detail-cover ${hasNewChapter ? "" : "is-last-train"}`} aria-label={`Cover of ${book.latinTitle}`}>
+          <span className="cover-kicker">{book.coverLabel}</span>
           <span className="cover-orbit orbit-one" />
           <span className="cover-orbit orbit-two" />
-          <strong lang="bn">চিঠি</strong>
-          <small>CHITHI</small>
-          <em lang="bn">নুসরাত আহমেদ</em>
+          <strong lang="bn">{book.title}</strong>
+          <small>{book.latinTitle}</small>
+          <em lang="bn">{book.author}</em>
         </div>
 
         <div className="book-detail-copy">
-          <div className="book-badges">
-            <span>Literary fiction</span>
-            <span>Ongoing serial</span>
-          </div>
-          <h1 lang="bn">চিঠি</h1>
+          <h1 lang="bn">{book.title}</h1>
           <button className="book-author" onClick={() => onNavigate("profile")}>
-            <span className="author-avatar">ন</span>
-            <span><small>Written by</small><strong lang="bn">নুসরাত আহমেদ</strong></span>
+            <span className="author-avatar">{book.authorInitial}</span>
+            <span><small>Written by</small><strong lang="bn">{book.author}</strong></span>
           </button>
           <div className="book-rating" aria-label="Rated 4.8 out of 5 by 1,240 readers">
             <span aria-hidden="true">★</span>
             <strong>4.8</strong>
             <small>1.2k reader ratings</small>
           </div>
-          <p className="book-synopsis" lang="bn">
-            পুরোনো ঢাকার একটি বন্ধ ডাকঘরে রাইসা এমন সব চিঠি খুঁজে পায়, যেগুলো কখনো
-            প্রাপকের কাছে পৌঁছায়নি। প্রতিটি খাম খুলতেই শহরের হারিয়ে যাওয়া মানুষ,
-            অসমাপ্ত ভালোবাসা আর তার নিজের পরিবারের চাপা পড়া ইতিহাস এক সুতোয় জড়াতে থাকে।
-          </p>
+          <p className="book-synopsis" lang="bn">{book.synopsis}</p>
+          <div className="book-badges" aria-label="Book tags">
+            {book.tags.map((tag) => <span key={tag}>{tag}</span>)}
+          </div>
           <div className="book-actions">
             <button className="primary-button" onClick={() => onNavigate("reader")}>
               Continue reading <Icon name="arrow" size={18} />
@@ -737,9 +823,23 @@ function BookDetailView({
             </button>
           </div>
           <dl className="book-facts">
-            <div><dt>12</dt><dd>Chapters</dd></div>
-            <div><dt>2h 46m</dt><dd>Total reading</dd></div>
-            <div><dt>Weekly</dt><dd>New chapters</dd></div>
+            <div>
+              <dt>
+                {book.chapterCount}
+                {hasNewChapter && (
+                  <span
+                    className="new-chapter-star"
+                    aria-label="A new chapter was added"
+                    title="New chapter available"
+                  >
+                    ★
+                  </span>
+                )}
+              </dt>
+              <dd>Chapters</dd>
+            </div>
+            <div><dt>{book.totalReading}</dt><dd>Total reading</dd></div>
+            <div><dt>{book.releaseLabel}</dt><dd>{book.releaseCaption}</dd></div>
           </dl>
         </div>
       </section>
@@ -751,12 +851,12 @@ function BookDetailView({
             <h2 id="chapter-index-title">Chapter index</h2>
           </div>
           <div className="book-overall-progress">
-            <span><strong>38%</strong> read</span>
-            <i><b /></i>
+            <span><strong>{book.progress}</strong> read</span>
+            <i><b style={{ width: book.progress }} /></i>
           </div>
         </div>
         <div className="chapter-index-list">
-          {chapters.map((chapter) => {
+          {book.chapters.map((chapter) => {
             const locked = chapter.access === "locked";
             return (
               <button
