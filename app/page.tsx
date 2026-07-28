@@ -69,6 +69,31 @@ type StudioDraftSelection = {
   chapterId: string;
 };
 
+type BookReview = {
+  id: string;
+  reader: string;
+  initial: string;
+  rating: number;
+  title: string;
+  body: string;
+  date: string;
+  helpful: number;
+  verified: boolean;
+  spoiler?: boolean;
+  isMine?: boolean;
+};
+
+type StudioFeedback = {
+  rating: string;
+  ratings: string;
+  response: string;
+  reactions: Array<{ label: string; value: number }>;
+  chapter: string;
+  chapterRating: string;
+  chapterReactions: string;
+  theme: string;
+};
+
 const initialStudioBooks: StudioBook[] = [
   {
     id: "chithi",
@@ -155,6 +180,88 @@ const initialStudioBooks: StudioBook[] = [
       { id: "window-02", number: "02", title: "নেগেটিভ", meta: "Edited last week", words: 1492, status: "Draft" },
       { id: "window-03", number: "03", title: "শেষ জানালা", meta: "Edited Thursday", words: 932, status: "Draft" },
     ],
+  },
+];
+
+const studioFeedback: Record<string, StudioFeedback> = {
+  chithi: {
+    rating: "4.8",
+    ratings: "1,240",
+    response: "92%",
+    reactions: [
+      { label: "আবেগপূর্ণ", value: 78 },
+      { label: "চমকপ্রদ", value: 64 },
+      { label: "মুগ্ধকর", value: 57 },
+    ],
+    chapter: "Chapter 07 · সাত দিনের নীরবতা",
+    chapterRating: "4.9",
+    chapterReactions: "84 reactions",
+    theme: "Readers are responding most strongly to the restrained emotion and the final reveal.",
+  },
+  nildoriya: {
+    rating: "4.6",
+    ratings: "864",
+    response: "88%",
+    reactions: [
+      { label: "বায়ুমণ্ডলপূর্ণ", value: 74 },
+      { label: "আবেগপূর্ণ", value: 61 },
+      { label: "ধীরগতির", value: 28 },
+    ],
+    chapter: "Chapter 04 · দূরের আলো",
+    chapterRating: "4.7",
+    chapterReactions: "61 reactions",
+    theme: "The coastal atmosphere is memorable; a small group wants the middle section to move faster.",
+  },
+  "monsoon-letters": {
+    rating: "4.7",
+    ratings: "592",
+    response: "90%",
+    reactions: [
+      { label: "ঘনিষ্ঠ", value: 71 },
+      { label: "সুন্দর ভাষা", value: 66 },
+      { label: "চিন্তাশীল", value: 54 },
+    ],
+    chapter: "Chapter 04 · A House of Rain",
+    chapterRating: "4.8",
+    chapterReactions: "47 reactions",
+    theme: "Readers consistently mention the intimacy of the character work and the monsoon imagery.",
+  },
+};
+
+const initialBookReviews: BookReview[] = [
+  {
+    id: "review-1",
+    reader: "মেহরিন সুলতানা",
+    initial: "মে",
+    rating: 5,
+    title: "চিঠিগুলো যেন শহরের স্মৃতি",
+    body: "গল্পটি খুব ধীরে দরজা খোলে, কিন্তু একবার ভেতরে ঢুকলে চরিত্রগুলোর নীরবতা আর পুরোনো ঢাকার আবহ সহজে ছেড়ে যায় না।",
+    date: "২ দিন আগে",
+    helpful: 42,
+    verified: true,
+  },
+  {
+    id: "review-2",
+    reader: "আরিফ চৌধুরী",
+    initial: "আ",
+    rating: 4,
+    title: "সংযত, সুন্দর, একটু ধীর",
+    body: "ভাষা ও পরিবেশ অসাধারণ। মাঝের অংশে গতি কিছুটা কম মনে হয়েছে, তবে চতুর্থ অধ্যায়ের শেষটি আমাকে পরের অধ্যায়ে নিয়ে গেছে।",
+    date: "৫ দিন আগে",
+    helpful: 27,
+    verified: true,
+  },
+  {
+    id: "review-3",
+    reader: "নাবিলা রহমান",
+    initial: "না",
+    rating: 5,
+    title: "শেষ প্রকাশটি দারুণ",
+    body: "এই রিভিউতে গল্পের একটি গুরুত্বপূর্ণ পারিবারিক প্রকাশ নিয়ে আলোচনা আছে।",
+    date: "১ সপ্তাহ আগে",
+    helpful: 19,
+    verified: true,
+    spoiler: true,
   },
 ];
 
@@ -581,9 +688,10 @@ function Studio({
   onCreateBook: (input: { title: string; format: string; language: string }) => void;
   onAddChapter: (bookId: string) => void;
 }) {
-  const [dialog, setDialog] = useState<"resume" | "new-book" | "chapters" | "manage" | "book" | null>(null);
+  const [dialog, setDialog] = useState<"resume" | "new-book" | "chapters" | "manage" | "book" | "feedback" | null>(null);
   const [selectedBookId, setSelectedBookId] = useState(activeDraft.bookId);
   const [selectedChapterId, setSelectedChapterId] = useState(activeDraft.chapterId);
+  const [feedbackBookId, setFeedbackBookId] = useState("chithi");
   const [chapterQuery, setChapterQuery] = useState("");
   const [newBookTitle, setNewBookTitle] = useState("");
   const [newBookFormat, setNewBookFormat] = useState("Novel manuscript");
@@ -602,6 +710,21 @@ function Studio({
       .includes(chapterQuery.trim().toLowerCase()),
   );
   const totalWords = allChapters.reduce((sum, item) => sum + item.chapter.words, 0);
+  const feedbackBook = books.find((book) => book.id === feedbackBookId) ?? books[0];
+  const feedback =
+    studioFeedback[feedbackBook?.id] ??
+    {
+      rating: "—",
+      ratings: "Not enough",
+      response: "—",
+      reactions: [
+        { label: "Collecting feedback", value: 12 },
+      ],
+      chapter: "No published chapter feedback yet",
+      chapterRating: "—",
+      chapterReactions: "Waiting for readers",
+      theme: "Publish a chapter to begin collecting private, aggregated reader signals.",
+    };
 
   useEffect(() => {
     if (!dialog) return;
@@ -761,6 +884,56 @@ function Studio({
             <button onClick={() => onOpenDraft(activeDraft)}>Open manuscript <Icon name="arrow" size={16} /></button>
           </div>
         </aside>
+      </section>
+
+      <section className="studio-feedback" aria-labelledby="studio-feedback-title">
+        <div className="studio-feedback-head">
+          <div>
+            <span className="eyebrow">Reader feedback</span>
+            <h2 id="studio-feedback-title">What readers are feeling</h2>
+            <p>Private, aggregated signals for your craft—never a list of individual readers.</p>
+          </div>
+          <button onClick={() => setDialog("feedback")}>View feedback report <Icon name="arrow" size={16} /></button>
+        </div>
+
+        <div className="feedback-book-tabs" role="tablist" aria-label="Choose a manuscript">
+          {books.slice(0, 3).map((book) => (
+            <button
+              role="tab"
+              aria-selected={feedbackBook?.id === book.id}
+              className={feedbackBook?.id === book.id ? "active" : ""}
+              key={book.id}
+              onClick={() => setFeedbackBookId(book.id)}
+            >
+              {book.title}
+            </button>
+          ))}
+        </div>
+
+        <div className="studio-feedback-grid">
+          <div className="feedback-score">
+            <small>Book rating</small>
+            <strong>{feedback.rating}</strong>
+            <span aria-label={`${feedback.rating} out of 5 stars`}>★★★★★</span>
+            <p>{feedback.ratings} verified reader ratings</p>
+          </div>
+          <div className="feedback-reactions">
+            <small>Most selected reactions</small>
+            {feedback.reactions.map((reaction) => (
+              <div key={reaction.label}>
+                <span lang="bn">{reaction.label}</span>
+                <i><b style={{ width: `${reaction.value}%` }} /></i>
+                <em>{reaction.value}%</em>
+              </div>
+            ))}
+          </div>
+          <div className="feedback-chapter">
+            <small>Strongest recent chapter</small>
+            <strong>{feedback.chapter}</strong>
+            <p><span>★ {feedback.chapterRating}</span>{feedback.chapterReactions}</p>
+            <blockquote>{feedback.theme}</blockquote>
+          </div>
+        </div>
       </section>
 
       <section className="book-row">
@@ -1016,6 +1189,49 @@ function Studio({
               onClick={() => showResumePicker(selectedBook.id, selectedBook.chapters.at(-1)?.id)}
             >
               Choose chapter <Icon name="arrow" size={17} />
+            </button>
+          </div>
+        </StudioDialog>
+      )}
+
+      {dialog === "feedback" && feedbackBook && (
+        <StudioDialog
+          eyebrow="Reader feedback report"
+          title={feedbackBook.title}
+          description="Book ratings and chapter reactions are reported separately so one strong or difficult chapter never distorts the complete-book score."
+          onClose={() => setDialog(null)}
+          wide
+        >
+          <div className="feedback-report">
+            <section>
+              <span className="picker-label">Book health</span>
+              <div className="feedback-report-metrics">
+                <div><strong>★ {feedback.rating}</strong><small>{feedback.ratings} ratings</small></div>
+                <div><strong>{feedback.response}</strong><small>Positive response</small></div>
+                <div><strong>{feedback.chapterRating}</strong><small>Top chapter rating</small></div>
+              </div>
+            </section>
+            <section>
+              <span className="picker-label">Reader themes</span>
+              <p>{feedback.theme}</p>
+              <div className="feedback-report-reactions">
+                {feedback.reactions.map((reaction) => (
+                  <span key={reaction.label} lang="bn">{reaction.label} <b>{reaction.value}%</b></span>
+                ))}
+              </div>
+            </section>
+            <section className="feedback-privacy-note">
+              <span aria-hidden="true">✓</span>
+              <p><strong>Designed for healthier feedback</strong><small>Reader identities stay private here. Reports combine reactions and reviews into useful craft signals, and writers cannot remove critical public reviews.</small></p>
+            </section>
+          </div>
+          <div className="dialog-actions">
+            <button className="secondary-button" onClick={() => setDialog(null)}>Close</button>
+            <button className="primary-button" onClick={() => {
+              setDialog(null);
+              onOpenDraft({ bookId: feedbackBook.id, chapterId: feedbackBook.chapters.at(-1)?.id ?? "" });
+            }}>
+              Open latest chapter <Icon name="arrow" size={17} />
             </button>
           </div>
         </StudioDialog>
@@ -1532,6 +1748,17 @@ function BookDetailView({
   onToast: (message: string) => void;
 }) {
   const [saved, setSaved] = useState(true);
+  const [reviews, setReviews] = useState<BookReview[]>(initialBookReviews);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewTitle, setReviewTitle] = useState("");
+  const [reviewBody, setReviewBody] = useState("");
+  const [reviewHasSpoiler, setReviewHasSpoiler] = useState(false);
+  const [reviewSort, setReviewSort] = useState("Most helpful");
+  const [spoilerFreeOnly, setSpoilerFreeOnly] = useState(false);
+  const [helpfulReviews, setHelpfulReviews] = useState<string[]>([]);
+  const [revealedSpoilers, setRevealedSpoilers] = useState<string[]>([]);
+  const reviewSectionRef = useRef<HTMLElement | null>(null);
   const hasNewChapter = variant === "new-chapter";
   const book = hasNewChapter
     ? {
@@ -1581,6 +1808,49 @@ function BookDetailView({
         ],
       };
 
+  const visibleReviews = [...reviews]
+    .filter((review) => !spoilerFreeOnly || !review.spoiler)
+    .sort((a, b) => {
+      if (reviewSort === "Recent") return b.id.localeCompare(a.id);
+      if (reviewSort === "Highest") return b.rating - a.rating;
+      if (reviewSort === "Lowest") return a.rating - b.rating;
+      return b.helpful - a.helpful;
+    });
+  const myReview = reviews.find((review) => review.isMine);
+
+  function openReviewDialog() {
+    setReviewRating(myReview?.rating ?? 0);
+    setReviewTitle(myReview?.title ?? "");
+    setReviewBody(myReview?.body ?? "");
+    setReviewHasSpoiler(Boolean(myReview?.spoiler));
+    setReviewDialogOpen(true);
+  }
+
+  function submitReview(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!reviewRating || !reviewBody.trim()) return;
+    const review: BookReview = {
+      id: myReview?.id ?? `review-mine-${Date.now()}`,
+      reader: "রুমানা কবির",
+      initial: "রু",
+      rating: reviewRating,
+      title: reviewTitle.trim() || "আমার পাঠ-অভিজ্ঞতা",
+      body: reviewBody.trim(),
+      date: "এইমাত্র",
+      helpful: myReview?.helpful ?? 0,
+      verified: true,
+      spoiler: reviewHasSpoiler,
+      isMine: true,
+    };
+    setReviews((current) =>
+      myReview
+        ? current.map((item) => item.id === myReview.id ? review : item)
+        : [review, ...current],
+    );
+    setReviewDialogOpen(false);
+    onToast(myReview ? "Your review was updated" : "Your review was published");
+  }
+
   return (
     <div className="product-page book-detail-page page-enter">
       <button className="book-back-link" onClick={() => onNavigate("home")}>
@@ -1603,11 +1873,15 @@ function BookDetailView({
             <span className="author-avatar">{book.authorInitial}</span>
             <span><small>Written by</small><strong lang="bn">{book.author}</strong></span>
           </button>
-          <div className="book-rating" aria-label="Rated 4.8 out of 5 by 1,240 readers">
+          <button
+            className="book-rating"
+            aria-label="Rated 4.8 out of 5 by 1,240 readers. Read reviews."
+            onClick={() => reviewSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          >
             <span aria-hidden="true">★</span>
             <strong>4.8</strong>
-            <small>1.2k reader ratings</small>
-          </div>
+            <small>1.2k reader ratings · Read reviews</small>
+          </button>
           <p className="book-synopsis" lang="bn">{book.synopsis}</p>
           <div className="book-badges" aria-label="Book tags">
             {book.tags.map((tag) => <span key={tag}>{tag}</span>)}
@@ -1674,6 +1948,11 @@ function BookDetailView({
                 <span className="index-copy">
                   <strong lang="bn">{chapter.title}</strong>
                   <small>{chapter.time}{chapter.progress ? ` · ${chapter.progress} complete` : ""}</small>
+                  {(chapter.number === "04" || chapter.number === "05") && (
+                    <em className="chapter-feedback-signal">
+                      ★ {chapter.number === "04" ? "4.9 · 84 reactions" : "4.7 · 61 reactions"}
+                    </em>
+                  )}
                 </span>
                 <span className={`access-label ${chapter.access}`}>
                   {locked ? <><span aria-hidden="true">♙</span> Locked</> : chapter.access === "free" ? "Free" : "Continue"}
@@ -1684,6 +1963,214 @@ function BookDetailView({
           })}
         </div>
       </section>
+
+      <section className="book-reviews" id="reader-reviews" ref={reviewSectionRef} aria-labelledby="reader-reviews-title">
+        <div className="book-reviews-head">
+          <div>
+            <span className="eyebrow">Reader perspective</span>
+            <h2 id="reader-reviews-title">Reader reviews</h2>
+            <p>Book ratings reflect the complete reading experience and stay separate from chapter reactions.</p>
+          </div>
+          <button className="primary-button" onClick={openReviewDialog}>
+            {myReview ? "Edit your review" : "Write a review"}
+          </button>
+        </div>
+
+        <div className="review-overview">
+          <div className="review-average">
+            <strong>4.8</strong>
+            <span aria-label="4.8 out of 5 stars">★★★★★</span>
+            <small>Based on 1,240 reader ratings</small>
+          </div>
+          <div className="rating-distribution" aria-label="Rating distribution">
+            {[
+              ["5", 74],
+              ["4", 18],
+              ["3", 6],
+              ["2", 1],
+              ["1", 1],
+            ].map(([stars, value]) => (
+              <div key={stars}>
+                <span>{stars} ★</span>
+                <i><b style={{ width: `${value}%` }} /></i>
+                <small>{value}%</small>
+              </div>
+            ))}
+          </div>
+          <aside className="review-eligibility">
+            <span aria-hidden="true">✓</span>
+            <div>
+              <strong>You can review this book</strong>
+              <small>You have read 38%—enough for a verified reader review.</small>
+            </div>
+          </aside>
+        </div>
+
+        <div className="review-controls">
+          <label>
+            Sort
+            <select value={reviewSort} onChange={(event) => setReviewSort(event.target.value)}>
+              <option>Most helpful</option>
+              <option>Recent</option>
+              <option>Highest</option>
+              <option>Lowest</option>
+            </select>
+          </label>
+          <label className="spoiler-filter">
+            <input
+              type="checkbox"
+              checked={spoilerFreeOnly}
+              onChange={(event) => setSpoilerFreeOnly(event.target.checked)}
+            />
+            Spoiler-free only
+          </label>
+          <span>{visibleReviews.length} reviews shown</span>
+        </div>
+
+        <div className="review-list">
+          {visibleReviews.map((review) => {
+            const isHelpful = helpfulReviews.includes(review.id);
+            const spoilerRevealed = revealedSpoilers.includes(review.id);
+            return (
+              <article key={review.id} className="review-card">
+                <header>
+                  <span className="reviewer-avatar">{review.initial}</span>
+                  <div>
+                    <strong lang="bn">{review.reader}</strong>
+                    <small>{review.date}</small>
+                  </div>
+                  {review.verified && <em>✓ Verified reader</em>}
+                </header>
+                <div className="review-card-rating" aria-label={`${review.rating} out of 5 stars`}>
+                  <span>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</span>
+                  <strong lang="bn">{review.title}</strong>
+                  {review.spoiler && <em>Spoiler</em>}
+                </div>
+                {review.spoiler && !spoilerRevealed ? (
+                  <button
+                    className="spoiler-cover"
+                    onClick={() => setRevealedSpoilers((current) => [...current, review.id])}
+                  >
+                    This review contains story details. Show review
+                  </button>
+                ) : (
+                  <p lang="bn">{review.body}</p>
+                )}
+                <footer>
+                  <button
+                    className={isHelpful ? "active" : ""}
+                    onClick={() =>
+                      setHelpfulReviews((current) =>
+                        isHelpful ? current.filter((id) => id !== review.id) : [...current, review.id],
+                      )
+                    }
+                  >
+                    {isHelpful ? "Helpful" : "Was this helpful?"} · {review.helpful + (isHelpful ? 1 : 0)}
+                  </button>
+                  {!review.isMine && <button onClick={() => onToast("Review reported for moderation")}>Report</button>}
+                </footer>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {reviewDialogOpen && (
+        <ReviewDialog title={myReview ? "Edit your review" : "Write a reader review"} onClose={() => setReviewDialogOpen(false)}>
+          <form className="review-form" onSubmit={submitReview}>
+            <div className="review-form-eligibility">
+              <span>✓</span>
+              <p><strong>Verified reader</strong><small>Your reading progress will appear with this review.</small></p>
+            </div>
+            <fieldset>
+              <legend>বইটি কেমন লেগেছে?</legend>
+              <div className="review-star-picker" role="radiogroup" aria-label="Book rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={reviewRating === star}
+                    className={reviewRating >= star ? "active" : ""}
+                    key={star}
+                    onClick={() => setReviewRating(star)}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+            <label>
+              Review title <span>Optional</span>
+              <input
+                value={reviewTitle}
+                onChange={(event) => setReviewTitle(event.target.value)}
+                placeholder="A short headline"
+              />
+            </label>
+            <label>
+              Your review
+              <textarea
+                value={reviewBody}
+                onChange={(event) => setReviewBody(event.target.value)}
+                placeholder="What stayed with you after reading?"
+                rows={5}
+                required
+              />
+            </label>
+            <label className="review-spoiler-check">
+              <input
+                type="checkbox"
+                checked={reviewHasSpoiler}
+                onChange={(event) => setReviewHasSpoiler(event.target.checked)}
+              />
+              This review contains spoilers
+            </label>
+            <div className="dialog-actions">
+              <button type="button" className="secondary-button" onClick={() => setReviewDialogOpen(false)}>Cancel</button>
+              <button className="primary-button" disabled={!reviewRating || !reviewBody.trim()}>
+                {myReview ? "Update review" : "Publish review"}
+              </button>
+            </div>
+          </form>
+        </ReviewDialog>
+      )}
+    </div>
+  );
+}
+
+function ReviewDialog({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  useEffect(() => {
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
+
+  return (
+    <div className="studio-dialog-layer">
+      <button className="studio-dialog-scrim" onClick={onClose} aria-label="Close review dialog" />
+      <section className="studio-dialog review-dialog" role="dialog" aria-modal="true" aria-labelledby="review-dialog-title">
+        <header>
+          <div>
+            <span className="eyebrow">Reader review</span>
+            <h2 id="review-dialog-title">{title}</h2>
+            <p>One review per reader. You can return and edit it whenever your opinion changes.</p>
+          </div>
+          <button className="icon-button" onClick={onClose} aria-label="Close">
+            <Icon name="close" size={19} />
+          </button>
+        </header>
+        <div className="studio-dialog-body">{children}</div>
+      </section>
     </div>
   );
 }
@@ -1693,6 +2180,11 @@ function ReaderCanvas({ onBack }: { onBack: () => void }) {
   const [fontStyle, setFontStyle] = useState<"serif" | "sans">("serif");
   const [theme, setTheme] = useState<"paper" | "light" | "night">("paper");
   const [progress, setProgress] = useState(38);
+  const [chapterRating, setChapterRating] = useState(0);
+  const [chapterReactions, setChapterReactions] = useState<string[]>([]);
+  const [chapterNoteOpen, setChapterNoteOpen] = useState(false);
+  const [chapterNote, setChapterNote] = useState("");
+  const [chapterFeedbackSent, setChapterFeedbackSent] = useState(false);
 
   useEffect(() => {
     function updateProgress() {
@@ -1705,6 +2197,14 @@ function ReaderCanvas({ onBack }: { onBack: () => void }) {
     updateProgress();
     return () => window.removeEventListener("scroll", updateProgress);
   }, []);
+
+  function toggleChapterReaction(reaction: string) {
+    setChapterReactions((current) =>
+      current.includes(reaction)
+        ? current.filter((item) => item !== reaction)
+        : [...current, reaction],
+    );
+  }
 
   return (
     <div className={`reader-canvas reader-theme-${theme}`}>
@@ -1777,6 +2277,81 @@ function ReaderCanvas({ onBack }: { onBack: () => void }) {
             বাক্য: <em>যদি সে কখনো খুঁজতে আসে, তাকে নদীর ওপারের বাড়িটির কথা বলো।</em>
           </p>
         </article>
+
+        <section className="chapter-reaction-panel" aria-labelledby="chapter-reaction-title">
+          {chapterFeedbackSent ? (
+            <div className="chapter-feedback-thanks">
+              <span aria-hidden="true">✓</span>
+              <div>
+                <h2 id="chapter-reaction-title" lang="bn">আপনার প্রতিক্রিয়া লেখকের কাছে পৌঁছেছে</h2>
+                <p lang="bn">অন্য পাঠকের পরিচয় নয়—লেখক শুধু সামগ্রিক পাঠক-প্রতিক্রিয়া দেখবেন।</p>
+              </div>
+              <button onClick={() => setChapterFeedbackSent(false)}>Edit</button>
+            </div>
+          ) : (
+            <>
+              <header>
+                <span>Chapter reaction</span>
+                <h2 id="chapter-reaction-title" lang="bn">এই অধ্যায়টি কেমন লেগেছে?</h2>
+                <p lang="bn">একটি দ্রুত প্রতিক্রিয়া দিন—লিখে জানানো ঐচ্ছিক।</p>
+              </header>
+              <div className="chapter-star-picker" role="radiogroup" aria-label="Chapter rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    type="button"
+                    role="radio"
+                    aria-checked={chapterRating === star}
+                    className={chapterRating >= star ? "active" : ""}
+                    key={star}
+                    onClick={() => setChapterRating(star)}
+                    aria-label={`${star} star${star > 1 ? "s" : ""}`}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+              <div className="chapter-reaction-chips" aria-label="Chapter reactions">
+                {["মুগ্ধকর", "আবেগপূর্ণ", "ধীরগতির", "চমকপ্রদ"].map((reaction) => (
+                  <button
+                    className={chapterReactions.includes(reaction) ? "active" : ""}
+                    key={reaction}
+                    onClick={() => toggleChapterReaction(reaction)}
+                    aria-pressed={chapterReactions.includes(reaction)}
+                    lang="bn"
+                  >
+                    {reaction}
+                  </button>
+                ))}
+              </div>
+              {chapterNoteOpen ? (
+                <label className="chapter-note-field">
+                  <span lang="bn">ছোট একটি মন্তব্য <small>ঐচ্ছিক</small></span>
+                  <textarea
+                    rows={3}
+                    value={chapterNote}
+                    onChange={(event) => setChapterNote(event.target.value)}
+                    placeholder="কোন মুহূর্তটি আপনার মনে রয়ে গেল?"
+                    lang="bn"
+                  />
+                </label>
+              ) : (
+                <button className="chapter-note-toggle" onClick={() => setChapterNoteOpen(true)} lang="bn">
+                  ছোট একটি মন্তব্য লিখুন
+                </button>
+              )}
+              <footer>
+                <small>Chapter ratings do not change the book’s overall rating.</small>
+                <button
+                  disabled={!chapterRating}
+                  onClick={() => setChapterFeedbackSent(true)}
+                >
+                  প্রতিক্রিয়া পাঠান
+                </button>
+              </footer>
+            </>
+          )}
+        </section>
+
         <footer className="reader-next">
           <span>End of chapter 4</span>
           <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
