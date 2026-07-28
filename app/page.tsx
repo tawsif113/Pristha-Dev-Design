@@ -673,45 +673,128 @@ function HomeLibrary({ onNavigate }: { onNavigate: (view: View) => void }) {
 }
 
 function DiscoverView({ onNavigate }: { onNavigate: (view: View) => void }) {
-  const [activeGenre, setActiveGenre] = useState("For you");
+  const [activeGenre, setActiveGenre] = useState("All");
+  const [discoveryQuery, setDiscoveryQuery] = useState("");
   const books = [
-    { title: "অচেনা জানালা", author: "সায়মা রহমান", tag: "Literary fiction", tone: "umber", initial: "অ" },
-    { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", tag: "Magical realism", tone: "sage", initial: "ম" },
-    { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", tag: "Mystery", tone: "navy", initial: "শ" },
-    { title: "নীল দরজা", author: "রাইসা করিম", tag: "Romance", tone: "teal", initial: "নী" },
-    { title: "শহরের নিচে", author: "নাবিল হাসান", tag: "Speculative", tone: "plum", initial: "শ" },
+    { title: "অচেনা জানালা", author: "সায়মা রহমান", genre: "Literary", tone: "umber", initial: "অ", rating: "4.9", readTime: "3h 10m", detail: "book-detail" as View },
+    { title: "মেঘের ভেতর বাড়ি", author: "তানভীর মুরাদ", genre: "Magical realism", tone: "sage", initial: "ম", rating: "4.8", readTime: "2h 35m", detail: "book-detail-no-new" as View },
+    { title: "শেষ ট্রেন", author: "তাহমিনা রেজা", genre: "Mystery", tone: "navy", initial: "শ", rating: "4.7", readTime: "4h 05m", detail: "book-detail-no-new" as View },
+    { title: "নীল দরজা", author: "রাইসা করিম", genre: "Romance", tone: "teal", initial: "নী", rating: "4.6", readTime: "2h 20m", detail: "book-detail" as View },
+    { title: "শহরের নিচে", author: "নাবিল হাসান", genre: "Speculative", tone: "plum", initial: "শ", rating: "4.5", readTime: "3h 45m", detail: "book-detail-no-new" as View },
+    { title: "ফিরে আসার গান", author: "ইশরাত জাহান", genre: "Literary", tone: "teal", initial: "ফি", rating: "4.8", readTime: "2h 55m", detail: "book-detail" as View },
   ];
+  const genres = ["All", "Literary", "Romance", "Mystery", "Magical realism"];
+  const normalizedQuery = discoveryQuery.trim().toLocaleLowerCase();
+  const visibleBooks = books.filter((book) => {
+    const matchesGenre = activeGenre === "All" || book.genre === activeGenre;
+    const matchesQuery =
+      !normalizedQuery ||
+      `${book.title} ${book.author} ${book.genre}`.toLocaleLowerCase().includes(normalizedQuery);
+    return matchesGenre && matchesQuery;
+  });
+  const isDefaultView = activeGenre === "All" && !normalizedQuery;
+
+  function resetDiscovery() {
+    setActiveGenre("All");
+    setDiscoveryQuery("");
+  }
+
   return (
-    <div className="product-page page-enter">
-      <PageHeader
-        eyebrow="Curated discovery"
-        title="Find your next voice"
-        subtitle="A slower, more thoughtful way to discover Bengali stories."
-        action={<button className="secondary-button" onClick={() => onNavigate("home")}>Return to your shelf</button>}
-      />
-      <section className="discovery-intro">
-        <span className="eyebrow">This week’s edit</span>
-        <h2>Stories about distance, return, and the rooms we remember.</h2>
-        <p>Selected by Pristha editors from independent writers and publishing houses.</p>
+    <div className="product-page discover-page page-enter">
+      <header className="discover-header">
+        <span className="eyebrow">Discover</span>
+        <h1>Find a story for tonight.</h1>
+        <p>Search by title or author, or choose the kind of story you feel like reading.</p>
+      </header>
+
+      <section className="discover-controls" aria-label="Find and filter books">
+        <div className="discover-search">
+          <Icon name="search" size={19} />
+          <label className="sr-only" htmlFor="discover-search-input">Search books or authors</label>
+          <input
+            id="discover-search-input"
+            type="search"
+            value={discoveryQuery}
+            onChange={(event) => setDiscoveryQuery(event.target.value)}
+            placeholder="Search by book, author, or genre"
+          />
+          {discoveryQuery && (
+            <button type="button" onClick={() => setDiscoveryQuery("")} aria-label="Clear search">
+              Clear
+            </button>
+          )}
+        </div>
+        <div className="discover-genres">
+          <span>Browse</span>
+          <div role="group" aria-label="Filter by genre">
+            {genres.map((genre) => (
+              <button
+                type="button"
+                className={activeGenre === genre ? "active" : ""}
+                aria-pressed={activeGenre === genre}
+                onClick={() => setActiveGenre(genre)}
+                key={genre}
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
-      <div className="filter-row" aria-label="Genres">
-        {["For you", "Literary", "Romance", "Mystery", "Poetry", "Non-fiction"].map((filter) => (
-          <button className={activeGenre === filter ? "active" : ""} onClick={() => setActiveGenre(filter)} key={filter}>{filter}</button>
-        ))}
-      </div>
-      <div className="discover-grid">
-        {books.map((book, index) => (
-          <button key={book.title} className={index === 0 ? "featured" : ""} onClick={() => onNavigate("book-detail")}>
-            <span className={`discovery-cover ${book.tone}`}><b lang="bn">{book.initial}</b><small>PRISTHA</small></span>
-            <span className="discover-copy">
-              <small>{book.tag}</small>
-              <strong lang="bn">{book.title}</strong>
-              <em lang="bn">{book.author}</em>
-              <span>{index === 0 ? "Editor’s selection" : `${(4.9 - index * 0.2).toFixed(1)} reader rating`}</span>
-            </span>
-          </button>
-        ))}
-      </div>
+
+      {isDefaultView && (
+        <section className="discover-feature" aria-labelledby="editors-pick-title">
+          <span className="discovery-cover umber"><b lang="bn">অ</b><small>PRISTHA</small></span>
+          <div>
+            <span className="eyebrow">Editor’s pick</span>
+            <h2 id="editors-pick-title" lang="bn">অচেনা জানালা</h2>
+            <p className="discover-author" lang="bn">সায়মা রহমান</p>
+            <p>A quiet, intimate novel about the lives we glimpse through other people’s windows—and the courage it takes to open our own.</p>
+            <div className="discover-feature-meta">
+              <span>Literary fiction</span>
+              <span>★ 4.9</span>
+              <span>3h 10m</span>
+            </div>
+            <button className="primary-button" onClick={() => onNavigate("book-detail")}>
+              View book <Icon name="arrow" size={17} />
+            </button>
+          </div>
+        </section>
+      )}
+
+      <section className="discover-results" aria-labelledby="discover-results-title">
+        <div className="discover-results-heading">
+          <div>
+            <span className="eyebrow">{isDefaultView ? "Browse the shelf" : "Search results"}</span>
+            <h2 id="discover-results-title">
+              {activeGenre === "All" ? "All stories" : activeGenre}
+            </h2>
+          </div>
+          <span>{visibleBooks.length} {visibleBooks.length === 1 ? "book" : "books"}</span>
+        </div>
+
+        {visibleBooks.length > 0 ? (
+          <div className="discover-grid">
+            {visibleBooks.map((book) => (
+              <button key={book.title} onClick={() => onNavigate(book.detail)}>
+                <span className={`discovery-cover ${book.tone}`}><b lang="bn">{book.initial}</b><small>PRISTHA</small></span>
+                <span className="discover-copy">
+                  <small>{book.genre}</small>
+                  <strong lang="bn">{book.title}</strong>
+                  <em lang="bn">{book.author}</em>
+                  <span>★ {book.rating} · {book.readTime}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="discover-empty">
+            <span>No books found</span>
+            <h3>Try a different title, author, or genre.</h3>
+            <button type="button" className="secondary-button" onClick={resetDiscovery}>Show all books</button>
+          </div>
+        )}
+      </section>
     </div>
   );
 }
