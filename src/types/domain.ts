@@ -235,3 +235,25 @@ export interface BookSearchQuery {
   page?: number;
   pageSize?: number;
 }
+
+export type PostKind = "thought" | "short-story" | "essay";
+
+export interface StandalonePost {
+  id: string;
+  slug: string;
+  kind: PostKind;
+  title?: string;
+  content: string;
+  authorName: string;
+  authorUsername: string;
+  authorAvatar?: string;
+  publishedAtLabel: string;
+  readingTimeMinutes?: number;
+  likesCount: number;
+  commentsCount: number;
+  sharesCount: number;
+  bookmarksCount: number;
+  tags?: string[];
+  hasAudio?: boolean;
+}
+

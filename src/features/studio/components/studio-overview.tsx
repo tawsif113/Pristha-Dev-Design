@@ -9,6 +9,7 @@ import { Modal } from "@/src/components/ui/modal";
 import { routes } from "@/src/config/routes";
 import { usePristha } from "@/src/features/app-state/pristha-provider";
 import { studioFeedback } from "@/src/mocks/studio";
+import { cn } from "@/src/lib/cn";
 import type { StudioBook } from "@/src/types/domain";
 
 type StudioDialog = "resume" | "new-book" | null;
@@ -330,6 +331,16 @@ export function StudioOverview() {
   );
 }
 
+const weekData = [
+  { day: "সোম", fullDay: "সোমবার", words: 620, today: false },
+  { day: "মঙ্গল", fullDay: "মঙ্গলবার", words: 750, today: false },
+  { day: "বুধ", fullDay: "বুধবার", words: 810, today: false },
+  { day: "বৃহস্পতি", fullDay: "বৃহস্পতিবার", words: 540, today: false },
+  { day: "শুক্র", fullDay: "শুক্রবার", words: 920, today: false },
+  { day: "শনি", fullDay: "শনিবার", words: 480, today: false },
+  { day: "রবি", fullDay: "রবিবার", words: 740, today: true },
+];
+
 function WritingStreak() {
   return (
     <aside className="streak" aria-labelledby="writing-streak-title">
@@ -350,35 +361,36 @@ function WritingStreak() {
       </div>
       <div
         className="week-line"
-        role="progressbar"
-        aria-label="সাত দিনের লেখার অগ্রগতি"
-        aria-valuemin={0}
-        aria-valuemax={7}
-        aria-valuenow={7}
+        role="region"
+        aria-label="Weekly writing activity breakdown"
       >
-        {["সোম", "মঙ্গল", "বুধ", "বৃহস্পতি", "শুক্র", "শনি", "রবি"].map(
-          (day, index) => (
-            <span key={day}>
-              <small lang="bn">{day}</small>
-              <i
-                className={index === 6 ? "today" : undefined}
-                aria-hidden="true"
-              />
+        {weekData.map((item) => (
+          <div
+            key={item.day}
+            className={cn("week-day-slot", item.today && "is-today")}
+            tabIndex={0}
+            aria-label={`${item.fullDay}: ${item.words.toLocaleString()} words`}
+          >
+            <span className="dot-tooltip" role="tooltip">
+              <strong>{item.words.toLocaleString()}</strong> words
             </span>
-          ),
-        )}
+            <small lang="bn">{item.day}</small>
+            <i className={item.today ? "today" : undefined} aria-hidden="true" />
+          </div>
+        ))}
       </div>
       <div className="streak-summary">
-        <p lang="bn">
-          এই সপ্তাহে <span aria-hidden="true">·</span> ৪,৮৬০ শব্দ
+        <p className="summary-headline">
+          <span>This week</span>
+          <i className="summary-dot" aria-hidden="true" />
+          <span>4,860 words</span>
         </p>
-        <time dateTime="2026-07-27/2026-08-02" lang="bn">
-          ২৭ জুলাই–২ আগস্ট, ২০২৬
-        </time>
       </div>
     </aside>
   );
 }
+
+
 
 function StudioCover({ book }: { book: StudioBook }) {
   return (

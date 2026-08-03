@@ -4,11 +4,18 @@ import { EmptyState } from "@/src/components/feedback/empty-state";
 import { routes } from "@/src/config/routes";
 import { BookCard } from "@/src/features/books/components/book-card";
 import { BookGrid } from "@/src/features/books/components/book-grid";
+import { StandalonePostCard } from "@/src/features/posts/components/standalone-post-card";
 import { withSearchParams } from "@/src/lib/search-params";
-import type { BookSummary } from "@/src/types/domain";
+import type { BookSummary, StandalonePost } from "@/src/types/domain";
 import { cn } from "@/src/lib/cn";
 
-const formats = ["All stories", "Complete", "Ongoing", "Short read"];
+const formats = [
+  "All stories",
+  "Complete",
+  "Ongoing",
+  "Short read",
+  "Micro-thoughts",
+];
 const genres = [
   "All genres",
   "Literary fiction",
@@ -78,11 +85,13 @@ export function DiscoverExperience({
   allBooks,
   results,
   total,
+  posts = [],
   query,
 }: {
   allBooks: BookSummary[];
   results: BookSummary[];
   total: number;
+  posts?: StandalonePost[];
   query: DiscoverQuery;
 }) {
   const activeFormat = query.format ?? "All stories";
@@ -244,6 +253,30 @@ export function DiscoverExperience({
               </section>
             );
           })}
+
+          {posts.length > 0 && (
+            <section
+              className="discover-shelf"
+              aria-labelledby="discover-shelf-posts"
+            >
+              <header className="discover-shelf-heading">
+                <div>
+                  <span className="eyebrow">Micro-Thoughts & Short Stories</span>
+                  <h2 id="discover-shelf-posts" lang="bn">
+                    ক্ষুদ্রগল্প ও মুক্তচিন্তা
+                  </h2>
+                  <p>
+                    স্বাধীন লেখকদের তাৎক্ষণিক ভাবনা ও অনুভূতি।
+                  </p>
+                </div>
+              </header>
+              <div className="standalone-posts-grid">
+                {posts.slice(0, 3).map((post) => (
+                  <StandalonePostCard key={post.id} post={post} />
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       ) : (
         <section
@@ -267,12 +300,27 @@ export function DiscoverExperience({
               </h2>
             </div>
             <span>
-              {displayedTotal}{" "}
-              {displayedTotal === 1 ? "book" : "books"}
+              {activeFormat === "Micro-thoughts"
+                ? `${posts.length} pieces`
+                : `${displayedTotal} ${displayedTotal === 1 ? "book" : "books"}`}
             </span>
           </div>
 
-          {displayedResults.length > 0 ? (
+          {activeFormat === "Micro-thoughts" ? (
+            posts.length > 0 ? (
+              <div className="standalone-posts-grid">
+                {posts.map((post) => (
+                  <StandalonePostCard key={post.id} post={post} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                eyebrow="No posts found"
+                title="No micro-thoughts match your criteria."
+                description="Try clearing your search query to see all standalone pieces."
+              />
+            )
+          ) : displayedResults.length > 0 ? (
             <BookGrid books={displayedResults} />
           ) : (
             <EmptyState

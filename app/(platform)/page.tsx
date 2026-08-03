@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HomeExperience } from "@/src/features/library/components/home-experience";
-import { bookService, libraryService } from "@/src/services";
+import { bookService, libraryService, postService } from "@/src/services";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -14,16 +14,19 @@ export default async function HomePage({
 }: {
   searchParams: Promise<{ tab?: string }>;
 }) {
-  const [{ tab }, featuredBooks, libraryItems] = await Promise.all([
-    searchParams,
-    bookService.getFeaturedBooks(),
-    libraryService.getLibrary(),
-  ]);
+  const [{ tab }, featuredBooks, libraryItems, featuredPosts] =
+    await Promise.all([
+      searchParams,
+      bookService.getFeaturedBooks(),
+      libraryService.getLibrary(),
+      postService.getFeaturedPosts(),
+    ]);
   return (
     <HomeExperience
       activeTab={tab === "library" ? "library" : "tonight"}
       featuredBooks={featuredBooks}
       libraryItems={libraryItems}
+      featuredPosts={featuredPosts}
     />
   );
 }
