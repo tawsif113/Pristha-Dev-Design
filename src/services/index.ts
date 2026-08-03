@@ -11,3 +11,5 @@ export {
 export {
   mockPublishingHouseService as publishingHouseService,
 } from "./mock/mock-publishing-house-service";
+export { postService } from "./post-service";
+
