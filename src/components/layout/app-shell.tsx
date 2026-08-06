@@ -60,7 +60,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const searchRef = useRef<HTMLInputElement>(null);
-  const { toast } = usePristha();
+  const { toast, isAuthenticated, logout } = usePristha();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [workspaceMenu, setWorkspaceMenu] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -184,17 +184,32 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Icon name="audience" />
             <span>View profile</span>
           </Link>
-          <Link
-            className={cn(
-              "footer-profile-link",
-              (pathname === routes.login || pathname === routes.signup) && "active",
-            )}
-            href={routes.login}
-            onClick={closeNavigation}
-          >
-            <Icon name="studio" />
-            <span>Sign In / Sign Up</span>
-          </Link>
+          {isAuthenticated ? (
+            <button
+              type="button"
+              className="footer-profile-link logout-btn"
+              onClick={() => {
+                closeNavigation();
+                logout();
+                router.push(routes.login);
+              }}
+            >
+              <Icon name="close" />
+              <span lang="bn">লগআউট করুন (Logout)</span>
+            </button>
+          ) : (
+            <Link
+              className={cn(
+                "footer-profile-link",
+                (pathname === routes.login || pathname === routes.signup) && "active",
+              )}
+              href={routes.login}
+              onClick={closeNavigation}
+            >
+              <Icon name="studio" />
+              <span>Sign In / Sign Up</span>
+            </Link>
+          )}
         </div>
       </aside>
 
@@ -275,6 +290,20 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Icon name="settings" size={19} />
             </Link>
+            {isAuthenticated && (
+              <button
+                type="button"
+                className="icon-button topbar-logout"
+                title="লগআউট (Logout)"
+                aria-label="Logout"
+                onClick={() => {
+                  logout();
+                  router.push(routes.login);
+                }}
+              >
+                <Icon name="close" size={17} />
+              </button>
+            )}
           </div>
         </header>
 
