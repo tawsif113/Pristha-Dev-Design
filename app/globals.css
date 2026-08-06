@@ -2660,6 +2660,16 @@ textarea:focus-visible,
   margin-bottom: 16px;
 }
 
+.home-page-header h1 {
+  margin: 0;
+  color: var(--teal-deep);
+  font-family: var(--font-pristha-display), var(--font-pristha-bengali), Georgia, serif;
+  font-size: clamp(28px, 4.1vw, 52px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
 .home-subtabs {
   display: flex;
   align-items: flex-end;
