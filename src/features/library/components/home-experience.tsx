@@ -2,15 +2,12 @@ import Link from "next/link";
 import { Icon } from "@/src/components/ui/icon";
 import { routes } from "@/src/config/routes";
 import { BookCover } from "@/src/features/books/components/book-cover";
-import type { BookSummary, StandalonePost } from "@/src/types/domain";
-import { StandalonePostCard } from "@/src/features/posts/components/standalone-post-card";
+import type { BookSummary } from "@/src/types/domain";
 
 export function HomeExperience({
   featuredBooks,
-  featuredPosts = [],
 }: {
   featuredBooks: BookSummary[];
-  featuredPosts?: StandalonePost[];
 }) {
   return (
     <div className="product-page page-enter">
@@ -79,25 +76,6 @@ export function HomeExperience({
             ))}
           </div>
         </section>
-
-        {featuredPosts.length > 0 && (
-          <section className="open-section">
-            <div className="section-heading">
-              <div>
-                <span className="eyebrow">Standalone Pieces</span>
-                <h2 lang="bn">ক্ষুদ্রগল্প ও মুক্তচিন্তা</h2>
-              </div>
-              <Link href={`${routes.discover}?format=Micro-thoughts`}>
-                সব দেখুন
-              </Link>
-            </div>
-            <div className="standalone-posts-grid">
-              {featuredPosts.slice(0, 2).map((post) => (
-                <StandalonePostCard key={post.id} post={post} />
-              ))}
-            </div>
-          </section>
-        )}
 
         <section className="feed-line">
           <span className="profile-portrait">ন</span>

@@ -16,6 +16,11 @@ test("public reader journey supports direct routes", async ({ page, isMobile }) 
     page.getByRole("heading", { name: "Stories worth finding." }),
   ).toBeVisible();
 
+  await page.goto("/quick-reads");
+  await expect(
+    page.getByRole("heading", { name: "ক্ষুদ্রগল্প ও মুক্তচিন্তা" }),
+  ).toBeVisible();
+
   await page.goto("/books/chithi");
   await expect(page.getByRole("heading", { name: "চিঠি", level: 1 })).toBeVisible();
 

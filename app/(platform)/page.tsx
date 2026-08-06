@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HomeExperience } from "@/src/features/library/components/home-experience";
-import { bookService, postService } from "@/src/services";
+import { bookService } from "@/src/services";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -10,14 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [featuredBooks, featuredPosts] = await Promise.all([
-    bookService.getFeaturedBooks(),
-    postService.getFeaturedPosts(),
-  ]);
-  return (
-    <HomeExperience
-      featuredBooks={featuredBooks}
-      featuredPosts={featuredPosts}
-    />
-  );
+  const featuredBooks = await bookService.getFeaturedBooks();
+  return <HomeExperience featuredBooks={featuredBooks} />;
 }

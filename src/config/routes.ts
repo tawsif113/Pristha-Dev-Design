@@ -3,6 +3,7 @@ const segment = (value: string) => encodeURIComponent(value);
 export const routes = {
   home: "/",
   discover: "/discover",
+  quickReads: "/quick-reads",
   library: "/library",
   readingHistory: "/reading-history",
   bookmarks: "/bookmarks",
