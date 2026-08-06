@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/src/components/ui/icon";
 import { PageHeader } from "@/src/components/layout/page-header";
 import { StandalonePostCard } from "@/src/features/posts/components/standalone-post-card";
+import { routes } from "@/src/config/routes";
+import { usePristha } from "@/src/features/app-state/pristha-provider";
 import type { StandalonePost, PostKind } from "@/src/types/domain";
 
 const filterTabs = [
@@ -18,12 +21,23 @@ export function QuickReadsExperience({
 }: {
   initialPosts: StandalonePost[];
 }) {
+  const router = useRouter();
+  const { isAuthor, showToast } = usePristha();
   const [posts, setPosts] = useState<StandalonePost[]>(initialPosts);
   const [activeFilter, setActiveFilter] = useState("all");
   const [composerOpen, setComposerOpen] = useState(false);
   const [newPostText, setNewPostText] = useState("");
   const [selectedKind, setSelectedKind] = useState<PostKind>("thought");
   const [postTitle, setPostTitle] = useState("");
+
+  function handleWriteClick() {
+    if (!isAuthor) {
+      showToast("লেখা প্রকাশ করতে প্রথমে লেখক হিসেবে অনবোর্ডিং সম্পন্ন করুন।");
+      router.push(routes.becomeAuthor);
+      return;
+    }
+    setComposerOpen((prev) => !prev);
+  }
 
   const filteredPosts = posts.filter((post) => {
     if (activeFilter === "all") return true;
@@ -67,7 +81,7 @@ export function QuickReadsExperience({
           <button
             type="button"
             className="primary-button"
-            onClick={() => setComposerOpen((prev) => !prev)}
+            onClick={handleWriteClick}
           >
             <Icon name="plus" size={17} />
             <span>নতুন লেখা যোগ করুন</span>
