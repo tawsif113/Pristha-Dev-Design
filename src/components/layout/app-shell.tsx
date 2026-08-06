@@ -181,7 +181,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             href={routes.profile("rumana-kabir")}
             onClick={closeNavigation}
           >
-            <Icon name="audience" size={17} />
+            <Icon name="audience" />
             <span>View profile</span>
           </Link>
         </div>

@@ -463,36 +463,45 @@ textarea:focus-visible,
 }
 
 .sidebar-footer {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0 15px 16px;
+  margin: 12px 0 16px;
   padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .footer-profile-link {
-  min-width: 0;
-  height: 38px;
+  position: relative;
+  width: 100%;
+  height: 48px;
   display: flex;
-  flex: 1;
   align-items: center;
-  gap: 9px;
-  padding: 0 10px;
+  gap: 13px;
+  padding: 0 19px;
   border: 0;
-  border-radius: 9px;
   background: transparent;
-  color: #b8c0ba;
+  color: #d5d7d0;
   font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 12px;
+  font-size: 15.5px;
   text-align: left;
   cursor: pointer;
+  transition: color 160ms ease, background 160ms ease;
 }
 
-.footer-profile-link:hover,
+.footer-profile-link:hover {
+  color: #fffdf7;
+  background: rgba(255, 255, 255, 0.04);
+}
+
 .footer-profile-link.active {
-  background: rgba(255, 255, 255, 0.07);
-  color: #fffdf8;
+  color: #fffdf7;
+  background: linear-gradient(90deg, rgba(55, 124, 111, 0.2), rgba(55, 124, 111, 0.08));
+}
+
+.footer-profile-link.active::before {
+  content: "";
+  position: absolute;
+  inset: 9px auto 9px 0;
+  width: 2px;
+  background: var(--marigold);
 }
 
 .profile-row {
