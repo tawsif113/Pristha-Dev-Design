@@ -2651,8 +2651,8 @@ textarea:focus-visible,
 }
 
 .home-page-header {
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 12px;
+  border-bottom: 0;
 }
 
 .home-page-header > .eyebrow {
