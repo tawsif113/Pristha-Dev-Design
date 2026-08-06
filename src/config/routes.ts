@@ -11,6 +11,7 @@ export const routes = {
   settings: "/settings",
   login: "/login",
   signup: "/signup",
+  becomeAuthor: "/become-author",
   studio: "/studio",
   studioBooks: "/studio/books",
   studioAudience: "/studio/audience",

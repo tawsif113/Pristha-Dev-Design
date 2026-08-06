@@ -17,6 +17,7 @@ type StudioDialog = "resume" | "new-book" | null;
 export function StudioOverview() {
   const router = useRouter();
   const {
+    isAuthor,
     studioBooks,
     activeDraft,
     selectDraft,
@@ -75,6 +76,22 @@ export function StudioOverview() {
 
   return (
     <div className="studio-page page-enter">
+      {!isAuthor && (
+        <section className="author-onboarding-banner">
+          <div className="banner-content">
+            <span className="banner-badge" lang="bn">পাঠক অ্যাকাউন্ট</span>
+            <h3 lang="bn">আপনি কি পৃষ্ঠা-য় গল্প ও কবিতা লিখতে চান?</h3>
+            <p lang="bn">
+              স্টুডিও অ্যাক্সেস ও লেখা প্রকাশের জন্য প্রথমে প্রশ্নের উত্তর দিয়ে এবং ১২০০ শব্দের নমুনা গল্প জমা দিয়ে লেখক অনবোর্ডিং সম্পন্ন করুন।
+            </p>
+          </div>
+          <Link href={routes.becomeAuthor} className="primary-button">
+            <span lang="bn">অনবোর্ডিং শুরু করুন</span>
+            <Icon name="arrow" size={18} />
+          </Link>
+        </section>
+      )}
+
       <section className="studio-hero">
         <div className="hero-greeting">
           <span className="eyebrow">Writer Studio</span>

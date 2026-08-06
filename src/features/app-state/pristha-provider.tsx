@@ -25,10 +25,15 @@ interface CreateBookInput {
   language: string;
 }
 
+export type UserRole = "reader" | "author";
+
 interface PristhaContextValue {
   studioBooks: StudioBook[];
   activeDraft: StudioDraftSelection;
   toast: string;
+  userRole: UserRole;
+  isAuthor: boolean;
+  completeAuthorOnboarding: () => void;
   selectDraft: (selection: StudioDraftSelection) => void;
   createStudioBook: (input: CreateBookInput) => StudioDraftSelection;
   addStudioChapter: (bookId: string) => StudioDraftSelection | null;
@@ -38,11 +43,17 @@ interface PristhaContextValue {
 const PristhaContext = createContext<PristhaContextValue | null>(null);
 
 export function PristhaProvider({ children }: { children: ReactNode }) {
+  const [userRole, setUserRole] = useState<UserRole>("reader");
   const [studioBooks, setStudioBooks] =
     useState<StudioBook[]>(initialStudioBooks);
   const [activeDraft, setActiveDraft] =
     useState<StudioDraftSelection>(initialDraftSelection);
   const [toast, setToast] = useState("");
+
+  const completeAuthorOnboarding = useCallback(() => {
+    setUserRole("author");
+    setToast("অভিনন্দন! আপনার লেখক আবেদন অনুমোদিত হয়েছে।");
+  }, []);
 
   useEffect(() => {
     if (!toast) return;
@@ -133,6 +144,9 @@ export function PristhaProvider({ children }: { children: ReactNode }) {
       studioBooks,
       activeDraft,
       toast,
+      userRole,
+      isAuthor: userRole === "author",
+      completeAuthorOnboarding,
       selectDraft,
       createStudioBook,
       addStudioChapter,
@@ -141,11 +155,13 @@ export function PristhaProvider({ children }: { children: ReactNode }) {
     [
       activeDraft,
       addStudioChapter,
+      completeAuthorOnboarding,
       createStudioBook,
       selectDraft,
       showToast,
       studioBooks,
       toast,
+      userRole,
     ],
   );
 
