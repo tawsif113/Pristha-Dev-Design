@@ -2662,7 +2662,7 @@ textarea:focus-visible,
 
 .home-page-header h1 {
   margin: 0;
-  color: var(--teal-deep);
+  color: var(--ink);
   font-family: var(--font-pristha-display), var(--font-pristha-bengali), Georgia, serif;
   font-size: clamp(28px, 4.1vw, 52px);
   font-weight: 500;
