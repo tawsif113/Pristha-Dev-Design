@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("public reader journey supports direct routes", async ({ page, isMobile }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("tab", { name: "Tonight on your page" }),
+    page.getByRole("heading", { name: "Tonight on your page" }),
   ).toBeVisible();
 
   if (isMobile) {
