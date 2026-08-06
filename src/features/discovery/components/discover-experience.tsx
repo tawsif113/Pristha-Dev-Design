@@ -106,10 +106,6 @@ export function DiscoverExperience({
         <div>
           <span className="eyebrow">Discover</span>
           <h1>Stories worth finding.</h1>
-          <p>
-            Browse thoughtful selections, current favourites, and new
-            Bengali voices.
-          </p>
         </div>
         {!isDefault && (
           <Link className="discover-back" href={routes.discover}>
@@ -122,27 +118,6 @@ export function DiscoverExperience({
         className="discover-controls"
         aria-label="Find and filter books"
       >
-        <form className="discover-search" action={routes.discover}>
-          <Icon name="search" size={19} />
-          <label className="sr-only" htmlFor="discover-search-input">
-            Search books or authors
-          </label>
-          <input
-            id="discover-search-input"
-            type="search"
-            name="q"
-            defaultValue={query.q}
-            placeholder="Search books, authors, or genres"
-          />
-          {activeFormat !== "All stories" && (
-            <input type="hidden" name="format" value={activeFormat} />
-          )}
-          {activeGenre !== "All genres" && (
-            <input type="hidden" name="genre" value={activeGenre} />
-          )}
-          <button type="submit">Search</button>
-        </form>
-
         <div className="discover-filter-row">
           <div className="discover-formats">
             <span>Filter by</span>

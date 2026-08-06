@@ -3142,25 +3142,16 @@ textarea:focus-visible,
   align-items: flex-end;
   justify-content: space-between;
   gap: 28px;
-  padding: 10px 0 30px;
+  padding: 10px 0 16px;
 }
 
 .discover-header h1 {
-  margin: 9px 0 9px;
+  margin: 9px 0 0;
   font-family: var(--font-pristha-display), var(--font-pristha-bengali), Georgia, serif;
   font-size: clamp(38px, 4.2vw, 56px);
   font-weight: 500;
   letter-spacing: -0.035em;
   line-height: 1;
-}
-
-.discover-header p {
-  max-width: 580px;
-  margin: 0;
-  color: var(--muted);
-  font-family: var(--font-pristha-display), Georgia, serif;
-  font-size: 14px;
-  line-height: 1.55;
 }
 
 .discover-back {
@@ -3183,8 +3174,8 @@ textarea:focus-visible,
 
 .discover-controls {
   margin-bottom: 12px;
-  padding: 17px 0 18px;
-  border-top: 1px solid var(--hairline);
+  padding: 12px 0 18px;
+  border-top: 0;
   border-bottom: 1px solid var(--hairline);
 }
 
