@@ -181,8 +181,19 @@ export function AppShell({ children }: { children: ReactNode }) {
             href={routes.profile("rumana-kabir")}
             onClick={closeNavigation}
           >
-            <Icon name="audience" size={17} />
+            <Icon name="audience" />
             <span>View profile</span>
+          </Link>
+          <Link
+            className={cn(
+              "footer-profile-link",
+              (pathname === routes.login || pathname === routes.signup) && "active",
+            )}
+            href={routes.login}
+            onClick={closeNavigation}
+          >
+            <Icon name="studio" />
+            <span>Sign In / Sign Up</span>
           </Link>
         </div>
       </aside>

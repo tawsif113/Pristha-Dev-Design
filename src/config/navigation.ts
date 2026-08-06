@@ -27,6 +27,11 @@ export const navigationByWorkspace: Record<
           href: routes.discover,
           icon: "discover",
         },
+        {
+          label: "Quick Reads",
+          href: routes.quickReads,
+          icon: "pen",
+        },
         { label: "Library", href: routes.library, icon: "library" },
       ],
     },

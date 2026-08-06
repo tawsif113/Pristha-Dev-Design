@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("public reader journey supports direct routes", async ({ page, isMobile }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("tab", { name: "Tonight on your page" }),
+    page.getByRole("heading", { name: "Tonight on your page" }),
   ).toBeVisible();
 
   if (isMobile) {
@@ -14,6 +14,11 @@ test("public reader journey supports direct routes", async ({ page, isMobile }) 
   await page.getByRole("link", { name: "Discover" }).click();
   await expect(
     page.getByRole("heading", { name: "Stories worth finding." }),
+  ).toBeVisible();
+
+  await page.goto("/quick-reads");
+  await expect(
+    page.getByRole("heading", { name: "ক্ষুদ্রগল্প ও মুক্তচিন্তা" }),
   ).toBeVisible();
 
   await page.goto("/books/chithi");
@@ -77,6 +82,14 @@ test("mobile navigation opens and closes", async ({ page }, testInfo) => {
   await page.waitForTimeout(300);
   await page.getByRole("link", { name: "Discover" }).click();
   await expect(page).toHaveURL("/discover");
+});
+
+test("login and signup pages load and support mode switching", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("tab", { name: "লগইন করুন" })).toBeVisible();
+
+  await page.goto("/signup");
+  await expect(page.getByRole("tab", { name: "নতুন অ্যাকাউন্ট" })).toBeVisible();
 });
 
 
