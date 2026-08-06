@@ -35,8 +35,8 @@ export function QuickReadsExperience({
     if (!newPostText.trim()) return;
 
     const createdPost: StandalonePost = {
-      id: "post-" + Date.now(),
-      slug: "post-" + Date.now(),
+      id: `post-created-${posts.length + 1}`,
+      slug: `post-created-${posts.length + 1}`,
       kind: selectedKind,
       title: postTitle.trim() || undefined,
       content: newPostText.trim(),

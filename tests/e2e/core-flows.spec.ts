@@ -84,4 +84,12 @@ test("mobile navigation opens and closes", async ({ page }, testInfo) => {
   await expect(page).toHaveURL("/discover");
 });
 
+test("login and signup pages load and support mode switching", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page.getByRole("tab", { name: "লগইন করুন" })).toBeVisible();
+
+  await page.goto("/signup");
+  await expect(page.getByRole("tab", { name: "নতুন অ্যাকাউন্ট" })).toBeVisible();
+});
+
 

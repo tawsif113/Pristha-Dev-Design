@@ -9,6 +9,8 @@ export const routes = {
   bookmarks: "/bookmarks",
   notifications: "/notifications",
   settings: "/settings",
+  login: "/login",
+  signup: "/signup",
   studio: "/studio",
   studioBooks: "/studio/books",
   studioAudience: "/studio/audience",

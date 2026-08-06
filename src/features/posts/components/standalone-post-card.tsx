@@ -93,7 +93,7 @@ export function StandalonePostCard({ post }: { post: StandalonePost }) {
     if (!newCommentText.trim()) return;
 
     const newComment: CommentItem = {
-      id: "comment-" + Date.now(),
+      id: `comment-${comments.length + 1}`,
       authorName: "রুমানা কবীর",
       authorAvatar: "র",
       publishedAt: "মুহূর্ত আগে",
@@ -109,8 +109,11 @@ export function StandalonePostCard({ post }: { post: StandalonePost }) {
     e.preventDefault();
     if (!replyText.trim()) return;
 
+    const targetComment = comments.find((c) => c.id === commentId);
+    const replyCount = targetComment ? targetComment.replies.length : 0;
+
     const newReply: ReplyItem = {
-      id: "reply-" + Date.now(),
+      id: `reply-${commentId}-${replyCount + 1}`,
       authorName: "রুমানা কবীর",
       authorAvatar: "র",
       publishedAt: "মুহূর্ত আগে",
