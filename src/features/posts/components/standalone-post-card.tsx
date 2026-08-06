@@ -1,8 +1,35 @@
+"use client";
+
+import { useState } from "react";
 import type { StandalonePost } from "@/src/types/domain";
 import { Icon } from "@/src/components/ui/icon";
 
 export function StandalonePostCard({ post }: { post: StandalonePost }) {
   const isThought = post.kind === "thought";
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
+  const [likesCount, setLikesCount] = useState(post.likesCount);
+
+  function toggleLike() {
+    if (liked) {
+      setLiked(false);
+      setLikesCount((prev) => prev - 1);
+    } else {
+      setLiked(true);
+      setLikesCount((prev) => prev + 1);
+    }
+  }
+
+  function toggleBookmark() {
+    setBookmarked((prev) => !prev);
+  }
+
+  const kindLabel =
+    post.kind === "thought"
+      ? "মুক্তচিন্তা"
+      : post.kind === "short-story"
+        ? "অনুগল্প"
+        : "ক্ষুদ্র প্রবন্ধ";
 
   return (
     <article className={`standalone-post-card ${post.kind}`}>
@@ -11,10 +38,15 @@ export function StandalonePostCard({ post }: { post: StandalonePost }) {
           <span className="author-avatar">
             {post.authorAvatar || post.authorName.charAt(0)}
           </span>
-          <div>
-            <strong className="author-name" lang="bn">
-              {post.authorName}
-            </strong>
+          <div className="author-details">
+            <div className="author-name-row">
+              <strong className="author-name" lang="bn">
+                {post.authorName}
+              </strong>
+              <span className="kind-badge" lang="bn">
+                {kindLabel}
+              </span>
+            </div>
             <small className="author-handle">@{post.authorUsername}</small>
           </div>
         </div>
@@ -39,7 +71,6 @@ export function StandalonePostCard({ post }: { post: StandalonePost }) {
         <p className={`post-text ${isThought ? "is-thought" : ""}`} lang="bn">
           {post.content}
         </p>
-        {isThought && <i className="thought-quote-mark" aria-hidden="true" />}
       </div>
 
       {post.tags && post.tags.length > 0 && (
@@ -52,14 +83,15 @@ export function StandalonePostCard({ post }: { post: StandalonePost }) {
         </div>
       )}
 
-      <div className="post-actions">
+      <footer className="post-actions">
         <button
           type="button"
-          className="action-btn"
-          aria-label={`${post.likesCount} Likes`}
+          className={`action-btn ${liked ? "active" : ""}`}
+          onClick={toggleLike}
+          aria-label={`${likesCount} Likes`}
         >
           <Icon name="heart" size={16} />
-          <span lang="bn">{post.likesCount.toLocaleString()}</span>
+          <span lang="bn">{likesCount.toLocaleString()}</span>
         </button>
         <button
           type="button"
@@ -75,16 +107,17 @@ export function StandalonePostCard({ post }: { post: StandalonePost }) {
           aria-label="Share story"
         >
           <Icon name="arrow" size={16} />
-          <span>শেয়ার</span>
+          <span lang="bn">শেয়ার</span>
         </button>
         <button
           type="button"
-          className="action-btn bookmark-btn"
+          className={`action-btn bookmark-btn ${bookmarked ? "active" : ""}`}
+          onClick={toggleBookmark}
           aria-label="Bookmark story"
         >
           <Icon name="bookmark" size={16} />
         </button>
-      </div>
+      </footer>
     </article>
   );
 }

@@ -8,9 +8,9 @@ import type { StandalonePost, PostKind } from "@/src/types/domain";
 
 const filterTabs = [
   { id: "all", label: "সব" },
-  { id: "thought", label: "মুক্তচিন্তা" },
   { id: "short-story", label: "অনুগল্প" },
-  { id: "essay", label: "প্রবন্ধ" },
+  { id: "thought", label: "মুক্তচিন্তা" },
+  { id: "essay", label: "ক্ষুদ্র প্রবন্ধ" },
 ];
 
 export function QuickReadsExperience({
@@ -20,10 +20,10 @@ export function QuickReadsExperience({
 }) {
   const [posts, setPosts] = useState<StandalonePost[]>(initialPosts);
   const [activeFilter, setActiveFilter] = useState("all");
+  const [composerOpen, setComposerOpen] = useState(false);
   const [newPostText, setNewPostText] = useState("");
   const [selectedKind, setSelectedKind] = useState<PostKind>("thought");
   const [postTitle, setPostTitle] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const filteredPosts = posts.filter((post) => {
     if (activeFilter === "all") return true;
@@ -54,102 +54,117 @@ export function QuickReadsExperience({
     setPosts([createdPost, ...posts]);
     setNewPostText("");
     setPostTitle("");
-    setIsExpanded(false);
+    setComposerOpen(false);
   }
 
   return (
     <div className="product-page quick-reads-page page-enter">
       <PageHeader
         eyebrow="Quick Reads"
-        title="ক্ষুদ্রগল্প ও মুক্তচিন্তা"
-        subtitle="স্বাধীন লেখকদের তাৎক্ষণিক ভাবনা, অনুভূতি ও অনুগল্পের অফুরন্ত প্রবাহ।"
+        title="অনুগল্প ও মুক্তচিন্তা"
+        subtitle="স্বাধীন লেখকদের সংক্ষিপ্ত সাহিত্য, অনুগল্প ও ভাবনা।"
+        action={
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => setComposerOpen((prev) => !prev)}
+          >
+            <Icon name="plus" size={17} />
+            <span>নতুন লেখা যোগ করুন</span>
+          </button>
+        }
       />
 
-      <div className="quick-reads-layout">
-        {/* Quick Post Creator Box */}
-        <section className="quick-post-composer">
+      {composerOpen && (
+        <section className="quick-post-composer-card">
+          <header className="composer-card-header">
+            <h3 lang="bn">আপনার নতুন লেখা লিখুন</h3>
+            <button
+              type="button"
+              className="composer-close-btn"
+              onClick={() => setComposerOpen(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+          </header>
           <form onSubmit={handleCreatePost}>
-            <div className="composer-top">
-              <span className="composer-avatar">র</span>
-              <div className="composer-inputs">
-                {isExpanded && selectedKind !== "thought" && (
-                  <input
-                    type="text"
-                    placeholder="গল্পের শিরোনাম (ঐচ্ছিক)"
-                    value={postTitle}
-                    onChange={(e) => setPostTitle(e.target.value)}
-                    className="composer-title-input"
-                    lang="bn"
-                  />
-                )}
-                <textarea
-                  placeholder="আজ আপনার মনে কী চিন্তা আসছে? লিখুন আপনার মুক্তচিন্তা বা অনুগল্প..."
-                  value={newPostText}
-                  onChange={(e) => setNewPostText(e.target.value)}
-                  onFocus={() => setIsExpanded(true)}
-                  rows={isExpanded ? 4 : 2}
-                  className="composer-textarea"
-                  lang="bn"
-                />
-              </div>
+            <div className="composer-kind-selector">
+              <button
+                type="button"
+                className={`kind-pill ${selectedKind === "thought" ? "active" : ""}`}
+                onClick={() => setSelectedKind("thought")}
+              >
+                মুক্তচিন্তা
+              </button>
+              <button
+                type="button"
+                className={`kind-pill ${selectedKind === "short-story" ? "active" : ""}`}
+                onClick={() => setSelectedKind("short-story")}
+              >
+                অনুগল্প
+              </button>
+              <button
+                type="button"
+                className={`kind-pill ${selectedKind === "essay" ? "active" : ""}`}
+                onClick={() => setSelectedKind("essay")}
+              >
+                ক্ষুদ্র প্রবন্ধ
+              </button>
             </div>
 
-            {isExpanded && (
-              <div className="composer-actions">
-                <div className="composer-kind-selector">
-                  <button
-                    type="button"
-                    className={`kind-pill ${selectedKind === "thought" ? "active" : ""}`}
-                    onClick={() => setSelectedKind("thought")}
-                  >
-                    মুক্তচিন্তা
-                  </button>
-                  <button
-                    type="button"
-                    className={`kind-pill ${selectedKind === "short-story" ? "active" : ""}`}
-                    onClick={() => setSelectedKind("short-story")}
-                  >
-                    অনুগল্প
-                  </button>
-                  <button
-                    type="button"
-                    className={`kind-pill ${selectedKind === "essay" ? "active" : ""}`}
-                    onClick={() => setSelectedKind("essay")}
-                  >
-                    প্রবন্ধ
-                  </button>
-                </div>
-
-                <div className="composer-submit-group">
-                  <button
-                    type="button"
-                    className="secondary-button"
-                    onClick={() => {
-                      setIsExpanded(false);
-                      setNewPostText("");
-                      setPostTitle("");
-                    }}
-                  >
-                    বাতিল
-                  </button>
-                  <button
-                    type="submit"
-                    className="primary-button"
-                    disabled={!newPostText.trim()}
-                  >
-                    প্রকাশ করুন <Icon name="arrow" size={16} />
-                  </button>
-                </div>
-              </div>
+            {selectedKind !== "thought" && (
+              <input
+                type="text"
+                placeholder="গল্পের শিরোনাম"
+                value={postTitle}
+                onChange={(e) => setPostTitle(e.target.value)}
+                className="composer-title-input"
+                lang="bn"
+              />
             )}
+
+            <textarea
+              placeholder={
+                selectedKind === "thought"
+                  ? "আপনার ভাবনা বা অনুভূতির কথা লিখুন..."
+                  : "আপনার অনুগল্পটি লিখুন..."
+              }
+              value={newPostText}
+              onChange={(e) => setNewPostText(e.target.value)}
+              rows={5}
+              className="composer-textarea"
+              lang="bn"
+            />
+
+            <div className="composer-footer">
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => setComposerOpen(false)}
+              >
+                বাতিল
+              </button>
+              <button
+                type="submit"
+                className="primary-button"
+                disabled={!newPostText.trim()}
+              >
+                প্রকাশ করুন <Icon name="arrow" size={16} />
+              </button>
+            </div>
           </form>
         </section>
+      )}
 
-        {/* Filter Pills */}
-        <div className="quick-reads-filters" role="tablist" aria-label="Filter quick reads">
+      <div className="quick-reads-container">
+        {/* Filter Pills Bar */}
+        <nav className="quick-reads-filter-bar" aria-label="Filter quick reads">
+          <span className="filter-label">বিভাগ:</span>
           {filterTabs.map((tab) => (
             <button
               key={tab.id}
+              type="button"
               role="tab"
               aria-selected={activeFilter === tab.id}
               className={`filter-pill ${activeFilter === tab.id ? "active" : ""}`}
@@ -158,20 +173,20 @@ export function QuickReadsExperience({
               {tab.label}
             </button>
           ))}
-        </div>
+        </nav>
 
-        {/* Endless Feed Stream */}
-        <section className="quick-reads-feed" aria-label="Endless stream of posts">
+        {/* Editorial Feed Stream */}
+        <div className="quick-reads-stream" aria-label="Stream of stories and thoughts">
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post) => (
               <StandalonePostCard key={post.id} post={post} />
             ))
           ) : (
             <div className="quick-reads-empty">
-              <p>এই বিভাগে কোনো পোস্ট পাওয়া যায়নি।</p>
+              <p lang="bn">এই বিভাগে কোনো লেখা পাওয়া যায়নি।</p>
             </div>
           )}
-        </section>
+        </div>
       </div>
     </div>
   );
