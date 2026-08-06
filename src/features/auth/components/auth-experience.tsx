@@ -15,7 +15,7 @@ export function AuthExperience({
   initialMode?: AuthMode;
 }) {
   const router = useRouter();
-  const { showToast } = usePristha();
+  const { login, showToast } = usePristha();
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -42,11 +42,7 @@ export function AuthExperience({
 
     setTimeout(() => {
       setLoading(false);
-      if (mode === "signin") {
-        showToast("স্বাগতম! সফলভাবে প্রবেশ করেছেন।");
-      } else {
-        showToast("অভিনন্দন! আপনার পৃষ্ঠা অ্যাকাউন্ট তৈরি হয়েছে।");
-      }
+      login();
       router.push(routes.home);
     }, 800);
   }

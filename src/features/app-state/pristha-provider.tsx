@@ -33,6 +33,9 @@ interface PristhaContextValue {
   toast: string;
   userRole: UserRole;
   isAuthor: boolean;
+  isAuthenticated: boolean;
+  login: () => void;
+  logout: () => void;
   completeAuthorOnboarding: () => void;
   selectDraft: (selection: StudioDraftSelection) => void;
   createStudioBook: (input: CreateBookInput) => StudioDraftSelection;
@@ -43,12 +46,24 @@ interface PristhaContextValue {
 const PristhaContext = createContext<PristhaContextValue | null>(null);
 
 export function PristhaProvider({ children }: { children: ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [userRole, setUserRole] = useState<UserRole>("reader");
   const [studioBooks, setStudioBooks] =
     useState<StudioBook[]>(initialStudioBooks);
   const [activeDraft, setActiveDraft] =
     useState<StudioDraftSelection>(initialDraftSelection);
   const [toast, setToast] = useState("");
+
+  const login = useCallback(() => {
+    setIsAuthenticated(true);
+    setToast("স্বাগতম! সফলভাবে প্রবেশ করেছেন।");
+  }, []);
+
+  const logout = useCallback(() => {
+    setIsAuthenticated(false);
+    setUserRole("reader");
+    setToast("সফলভাবে লগআউট করা হয়েছে।");
+  }, []);
 
   const completeAuthorOnboarding = useCallback(() => {
     setUserRole("author");
@@ -146,6 +161,9 @@ export function PristhaProvider({ children }: { children: ReactNode }) {
       toast,
       userRole,
       isAuthor: userRole === "author",
+      isAuthenticated,
+      login,
+      logout,
       completeAuthorOnboarding,
       selectDraft,
       createStudioBook,
@@ -157,6 +175,9 @@ export function PristhaProvider({ children }: { children: ReactNode }) {
       addStudioChapter,
       completeAuthorOnboarding,
       createStudioBook,
+      isAuthenticated,
+      login,
+      logout,
       selectDraft,
       showToast,
       studioBooks,
