@@ -18,6 +18,7 @@ import {
   type WorkspaceKind,
 } from "@/src/config/routes";
 import { notifications } from "@/src/mocks/notifications";
+import { UserProfileMenu } from "@/src/components/layout/user-profile-menu";
 import { Icon } from "@/src/components/ui/icon";
 import { Toast } from "@/src/components/feedback/toast";
 import { usePristha } from "@/src/features/app-state/pristha-provider";
@@ -194,8 +195,8 @@ export function AppShell({ children }: { children: ReactNode }) {
                 router.push(routes.login);
               }}
             >
-              <Icon name="close" />
-              <span lang="bn">লগআউট করুন (Logout)</span>
+              <Icon name="close" size={15} />
+              <span>Log out</span>
             </button>
           ) : (
             <Link
@@ -290,20 +291,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               <Icon name="settings" size={19} />
             </Link>
-            {isAuthenticated && (
-              <button
-                type="button"
-                className="icon-button topbar-logout"
-                title="লগআউট (Logout)"
-                aria-label="Logout"
-                onClick={() => {
-                  logout();
-                  router.push(routes.login);
-                }}
-              >
-                <Icon name="close" size={17} />
-              </button>
-            )}
+
+            <UserProfileMenu />
           </div>
         </header>
 
